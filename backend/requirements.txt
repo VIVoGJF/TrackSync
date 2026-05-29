@@ -1,0 +1,32 @@
+# FastAPI
+fastapi==0.136.1
+uvicorn==0.46.0
+
+
+# Database
+SQLAlchemy==2.0.49
+asyncpg==0.31.0
+greenlet==3.5.0
+
+
+# Migrations
+alembic==1.18.4
+
+
+# Environment
+python-dotenv==1.2.2
+pydantic-settings
+
+
+# Authentication
+bcrypt==5.0.0
+passlib==1.7.4
+python-jose==3.5.0
+
+
+# File Upload Support
+python-multipart==0.0.20
+
+
+# Supabase
+supabase==2.15.3

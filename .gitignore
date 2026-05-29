@@ -1,0 +1,3 @@
+backend/.env
+backend/alembic.ini
+backend/db_migrations/
