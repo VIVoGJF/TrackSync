@@ -11,11 +11,11 @@ class TaskActivePeriod(Base):
     __tablename__ = "task_active_periods"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=False, unique=True, index=True)
+    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=False, index=True)
     iteration = Column(Integer, nullable=False)
-    start_time = Column(Date, nullable=False)
-    end_time = Column(Date, nullable=True)
-    
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=True)
+
     __table_args__ = (
-        UniqueConstraint('task_id', 'iteration', name='uq_task_iteration')
+        UniqueConstraint('task_id', 'iteration', name='uq_task_iteration'),
     )

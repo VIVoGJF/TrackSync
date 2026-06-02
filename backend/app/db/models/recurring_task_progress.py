@@ -18,5 +18,5 @@ class RecurringTaskProgress(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     
     __table_args__ = (
-        UniqueConstraint('task_id', 'year', 'month', name='uq_task_month_progress')
+        UniqueConstraint('task_id', 'year', 'month', name='uq_task_month_progress'),
     )
