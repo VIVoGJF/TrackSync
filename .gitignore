@@ -1,3 +1,7 @@
+# Environment
 backend/.env
-backend/alembic.ini
-backend/db_migrations/
+backend/venv/
+
+# Python
+__pycache__/
+*.pyc
