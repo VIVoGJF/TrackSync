@@ -3,6 +3,7 @@ import uuid
 from sqlalchemy import Column, Integer, DateTime, Date, ForeignKey, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
@@ -19,3 +20,5 @@ class DailyActivity(Base):
     __table_args__ = (
         UniqueConstraint('user_id', 'activity_date', name='uq_user_activity_date'),
     )
+    
+    user = relationship("User", back_populates="activities")

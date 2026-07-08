@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy import Column, Integer, Date, ForeignKey, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 
 from app.db.database import Base
@@ -19,3 +20,5 @@ class TaskActivePeriod(Base):
     __table_args__ = (
         UniqueConstraint('task_id', 'iteration', name='uq_task_iteration'),
     )
+    
+    task = relationship("Task", back_populates="active_periods")
