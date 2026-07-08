@@ -3,6 +3,7 @@ import uuid
 from sqlalchemy import Column, Integer, DateTime, ForeignKey, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
@@ -20,3 +21,5 @@ class RecurringTaskProgress(Base):
     __table_args__ = (
         UniqueConstraint('task_id', 'year', 'month', name='uq_task_month_progress'),
     )
+    
+    task = relationship("Task", back_populates="recurring_progress")

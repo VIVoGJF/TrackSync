@@ -3,6 +3,7 @@ import uuid
 from sqlalchemy import Column, DateTime, Date, ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
@@ -16,3 +17,5 @@ class DeadlineTaskCompletion(Base):
     deadline_date = Column(Date, nullable=False)
     completed = Column(Boolean, default=False, nullable=False)
     completed_at = Column(DateTime(timezone=True), nullable=True)
+    
+    task = relationship("Task", back_populates="deadline_completion")

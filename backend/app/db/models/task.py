@@ -1,11 +1,17 @@
 import uuid
+import enum
 
 from sqlalchemy import Column, String, DateTime, ForeignKey, Boolean, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
+class TaskType(str, enum.Enum):
+    DAILY = "DAILY"
+    WEEKLY = "WEEKLY"
+    DEADLINE = "DEADLINE"
 
 class Task(Base):
     
@@ -19,3 +25,8 @@ class Task(Base):
     is_archived = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    
+    user = relationship("User", back_populates="tasks")
+    active_periods = relationship("TaskActivePeriod", back_populates="task", cascade="all, delete-orphan")
+    recurring_progress = relationship("RecurringTaskProgress", back_populates="task", cascade="all, delete-orphan")
+    deadline_completion = relationship("DeadlineTaskCompletion", back_populates="task", cascade="all, delete-orphan", uselist=False )
