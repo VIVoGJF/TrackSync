@@ -12,7 +12,7 @@ class DeadlineTaskCompletion(Base):
     __tablename__ = "deadline_task_completions"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=False, unique = True, index=True)
+    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id", ondelete="CASCADE"), nullable=False, unique = True, index=True)
     start_date = Column(Date, nullable=False)
     deadline_date = Column(Date, nullable=False)
     completed = Column(Boolean, default=False, nullable=False)

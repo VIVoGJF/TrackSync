@@ -20,6 +20,8 @@ class TaskUpdate(BaseModel):
 
     deadline: date | None = None
 
+class DeadlineUpdate(BaseModel):
+    deadline: date 
 
 class TaskResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
