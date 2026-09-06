@@ -12,7 +12,7 @@ class TaskActivePeriod(Base):
     __tablename__ = "task_active_periods"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=False, index=True)
+    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id", ondelete="CASCADE"), nullable=False, index=True)
     iteration = Column(Integer, nullable=False)
     start_date = Column(Date, nullable=False)
     end_date = Column(Date, nullable=True)
