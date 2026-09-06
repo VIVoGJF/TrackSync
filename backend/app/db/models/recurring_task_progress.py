@@ -12,7 +12,7 @@ class RecurringTaskProgress(Base):
     __tablename__ = "recurring_task_progress"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=False, index=True)
+    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id", ondelete="CASCADE"), nullable=False, index=True)
     year = Column(Integer, nullable=False)
     month = Column(Integer, nullable=False)
     status_string = Column(String(31), nullable=False)
