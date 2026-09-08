@@ -30,3 +30,4 @@ class Task(Base):
     active_periods = relationship("TaskActivePeriod", back_populates="task", cascade="all, delete-orphan")
     recurring_progress = relationship("RecurringTaskProgress", back_populates="task", cascade="all, delete-orphan")
     deadline_completion = relationship("DeadlineTaskCompletion", back_populates="task", cascade="all, delete-orphan", uselist=False )
+    weekly_completions = relationship("WeeklyTaskCompletion", back_populates="task", cascade="all, delete-orphan")
