@@ -27,6 +27,8 @@ class ActivityResponse(BaseModel):
     date: date
     count: int
 
+class YearlyActivityResponse(BaseModel):
+    activity: list[ActivityResponse]
 
 class DailyTaskResponse(BaseModel):
     task_id: UUID

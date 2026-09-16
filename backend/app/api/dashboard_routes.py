@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from uuid import UUID
 from calendar import monthrange
 
@@ -10,7 +10,7 @@ from app.api.auth_routes import get_current_user
 from app.db.database import get_db
 from app.db.models import DeadlineTaskCompletion, RecurringTaskProgress, Task, TaskActivePeriod, TaskType, User, WeeklyTaskCompletion
 from app.db.models import DailyActivity
-from app.schemas.dashboard_schemas import ActivePeriodResponse, ActivityResponse, DashboardResponse, DailyTaskResponse, DeadlineResponse, DeadlineTaskResponse, WeeklyCompletionResponse, WeeklyTaskResponse
+from app.schemas.dashboard_schemas import YearlyActivityResponse, ActivePeriodResponse, ActivityResponse, DashboardResponse, DailyTaskResponse, DeadlineResponse, DeadlineTaskResponse, WeeklyCompletionResponse, WeeklyTaskResponse
 
 from app.services.progress_service import initialize_status_string
 
@@ -218,4 +218,31 @@ async def get_dashboard(year: int, month: int, db: AsyncSession = Depends(get_db
             )
             for entry in activity
         ],
+    )
+    
+@router.get("/activity", response_model=YearlyActivityResponse)
+async def get_activity(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    end = date.today()
+    start = end - timedelta(days=364)
+
+    result = await db.execute(
+        select(DailyActivity)
+        .where(
+            DailyActivity.user_id == current_user.id,
+            DailyActivity.activity_date >= start,
+            DailyActivity.activity_date <= end,
+        )
+        .order_by(DailyActivity.activity_date)
+    )
+
+    activities = result.scalars().all()
+
+    return YearlyActivityResponse(
+        activity=[
+            ActivityResponse(
+                date=activity.activity_date,
+                count=activity.activity_count,
+            )
+            for activity in activities
+        ]
     )

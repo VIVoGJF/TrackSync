@@ -76,10 +76,17 @@ async def toggle_progress(task_id: UUID, payload: ProgressToggle, background_tas
         )
 
     elif task.task_type == TaskType.DEADLINE:
-        new_status = await toggle_deadline_progress(
-            db=db,
-            task=task,
-        )
+        try:
+            new_status = await toggle_deadline_progress(
+                db,
+                task,
+                requested_date = payload.date,
+            )
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(exc),
+            )
 
     else:
         raise HTTPException(

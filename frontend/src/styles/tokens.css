@@ -1,0 +1,54 @@
+:root {
+    /* Surfaces */
+    --bg-page: #101214;
+    --bg-surface: #191b1e;
+    /* header bar, nested panels */
+    --bg-card: #28292b;
+    /* cards, empty grid/heatmap cell */
+    --bg-card-hover: #303234;
+    --border-subtle: #34363a;
+
+    /* Text */
+    --text-primary: #e6e6e6;
+    --text-secondary: #9a9ea3;
+    --text-muted: #6b6f73;
+
+    /* Brand */
+    --calendar-body-dark: #1d2f33;
+
+    /* Contribution / progress scale (shared by heatmap + task grid) */
+    --level-0: var(--bg-card);
+    --level-1: #116329;
+    --level-2: #2B9343;
+    --level-3: #62D17D;
+    --level-4: #ACEEBB;
+
+    /* Task-type accent colors (for gauge segments / breakdown) */
+    --type-daily: #62d17d;
+    --type-weekly: #5b8def;
+    --type-deadline: #e8a33d;
+
+    /* Status */
+    --danger: #e5534b;
+    --danger-dim: #4a2b29;
+
+    /* Type scale */
+    --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Spacing (4px base) */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    /* Shadow */
+    --shadow-panel: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
