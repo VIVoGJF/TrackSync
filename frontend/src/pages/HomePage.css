@@ -1,0 +1,52 @@
+:root {
+    --page-max-width: 1200px;
+}
+
+
+.home-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-loading,
+.home-error {
+    padding: var(--space-6);
+    color: var(--text-secondary);
+}
+
+.home-content {
+    display: flex;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-6);
+    align-items: flex-start;
+
+    width: 100%;
+    max-width: var(--page-max-width);
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.home-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+
+}
+
+.home-top-row {
+    display: flex;
+    gap: var(--space-4);
+    align-items: stretch;
+}
+
+.home-gauge-panel {
+    flex: 1;
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    display: flex;
+    justify-content: center;
+}

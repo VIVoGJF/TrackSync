@@ -1,0 +1,79 @@
+.yearly-heatmap {
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) 15px;
+    overflow-x: auto;
+}
+
+.heatmap-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-4);
+}
+
+.total-count{
+    font-size: 20px;
+}
+
+.heatmap-stats strong {
+    color: var(--text-primary);
+}
+
+.heatmap-months {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.heatmap-month-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.heatmap-columns {
+    display: flex;
+    gap: 3px;
+}
+
+.heatmap-column {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.heatmap-cell {
+    width: 9.5px;
+    height: 9.5px;
+    border-radius: 2px;
+    background: var(--level-0);
+}
+
+.heatmap-cell--empty {
+    visibility: hidden;
+}
+
+.heatmap-cell[data-level='1'] {
+    background: var(--level-1);
+}
+
+.heatmap-cell[data-level='2'] {
+    background: var(--level-2);
+}
+
+.heatmap-cell[data-level='3'] {
+    background: var(--level-3);
+}
+
+.heatmap-cell[data-level='4'] {
+    background: var(--level-4);
+}
+
+.heatmap-month-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+}

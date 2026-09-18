@@ -10,6 +10,7 @@ from app.db.database import get_db
 from app.db.models import User
 
 from app.core.security import hash_password, verify_password, create_access_token, decode_access_token
+from app.core.timezones import is_valid_timezone
 
 
 router = APIRouter(
@@ -51,10 +52,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
 
 @router.post("/signup")
 async def signup(user: UserSignup, db: AsyncSession = Depends(get_db)):
+    user_timezone = user.timezone if user.timezone and is_valid_timezone(user.timezone) else "UTC"
+
     new_user = User(
         username=user.username.strip().lower(),
         email=user.email.strip().lower(),
-        password_hash=hash_password(user.password)
+        password_hash=hash_password(user.password),
+        timezone=user_timezone,
     )
 
     db.add(new_user)

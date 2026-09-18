@@ -1,0 +1,42 @@
+.mini-calendar {
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    width: 260px;
+    flex-shrink: 0;
+}
+
+.mini-calendar-month {
+    margin: 0 0 var(--space-2);
+    justify-self: center;
+    font-family: "Bauhaus 93", "Blippo", "Arial Black", sans-serif;
+    font-size: 30px;
+    font-weight: 500;
+    color: #E2E2E2;
+}
+
+.mini-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+}
+
+.mini-calendar-weekday {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding-bottom: 4px;
+}
+
+.mini-calendar-day {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    border-radius: 50%;
+}
+
+.mini-calendar-day-today {
+    background: var(--level-2);
+    color: #0b1a0f;
+    font-weight: 700;
+}

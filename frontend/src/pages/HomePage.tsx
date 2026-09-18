@@ -1,0 +1,93 @@
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../context/AuthContext';
+import { getDashboard } from '../api/dashboard';
+import { getActivity } from '../api/dashboard';
+import { computeGaugeBreakdown } from '../lib/gauge';
+import { buildHeatmapGrid, getHeatmapStats } from '../lib/heatmap';
+import { getTodaysTasks } from '../lib/todaysTasks';
+import { toLocalDateString } from '../lib/dateIndex';
+import { TopBar } from '../components/TopBar';
+import { ProfilePanel } from '../components/ProfilePanel';
+import { Gauge } from '../components/Gauge';
+import { MiniCalendar } from '../components/MiniCalendar';
+import { YearlyHeatmap } from '../components/YearlyHeatmap';
+import { TodaysTasks } from '../components/TodaysTasks';
+import './HomePage.css';
+
+export function HomePage() {
+  const { user, logout } = useAuth();
+
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const todayStr = toLocalDateString(today);
+
+  const dashboardQuery = useQuery({
+    queryKey: ['dashboard', year, month],
+    queryFn: () => getDashboard(year, month),
+  });
+
+  const activityQuery = useQuery({
+    queryKey: ['activity'],
+    queryFn: () => getActivity(),
+  });
+
+  if (dashboardQuery.isLoading || activityQuery.isLoading) {
+    return (
+      <div className="home-page">
+        <TopBar username={user?.username ?? ''} />
+        <p className="home-loading">Loading…</p>
+      </div>
+    );
+  }
+
+  if (dashboardQuery.isError || !dashboardQuery.data) {
+    return (
+      <div className="home-page">
+        <TopBar username={user?.username ?? ''} />
+        <p className="home-error">Couldn't load your dashboard. Try refreshing.</p>
+      </div>
+    );
+  }
+
+  const dashboard = dashboardQuery.data;
+  const activity = activityQuery.data?.activity ?? [];
+
+  const yearAgo = new Date(today);
+  yearAgo.setDate(yearAgo.getDate() - 364);
+  const yearAgoStr = toLocalDateString(yearAgo);
+
+  const gaugeBreakdown = computeGaugeBreakdown(dashboard.tasks);
+  const heatmapMonths = buildHeatmapGrid(activity, yearAgoStr, todayStr);
+  const heatmapStats = getHeatmapStats(activity);
+  const todaysTasks = getTodaysTasks(dashboard.tasks, today, todayStr);
+
+  return (
+    <div className="home-page">
+      <TopBar username={user?.username ?? ''} />
+
+      <div className="home-content">
+        <ProfilePanel username={user?.username ?? ''} />
+
+        <div className="home-main">
+          <div className="home-top-row">
+            <div className="home-gauge-panel">
+              <Gauge breakdown={gaugeBreakdown} />
+            </div>
+            <MiniCalendar />
+          </div>
+
+          <YearlyHeatmap months={heatmapMonths} stats={heatmapStats} />
+
+          <TodaysTasks items={todaysTasks} />
+          <div style={{ padding: 32 }}>
+            <button className="primary-button" onClick={logout} style={{ width: 'auto', padding: '8px 16px' }}>
+              Log out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  );
+}
