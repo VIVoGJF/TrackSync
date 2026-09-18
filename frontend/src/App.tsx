@@ -1,11 +1,11 @@
+import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { queryClient } from './api/queryClient';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './context/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { HomePage } from './pages/HomePage';
-import { queryClient } from './api/queryClient';
-import { QueryClientProvider } from '@tanstack/react-query';
 
 export default function App() {
   return (

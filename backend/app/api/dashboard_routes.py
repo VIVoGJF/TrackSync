@@ -140,7 +140,7 @@ async def get_dashboard(year: int, month: int, db: AsyncSession = Depends(get_db
                         start_date=deadline.start_date,
                         deadline_date=deadline.deadline_date,
                         completed=deadline.completed,
-                        completed_at=deadline.completed_at,
+                        completion_date=deadline.completion_date,
                     ),
                 )
             )

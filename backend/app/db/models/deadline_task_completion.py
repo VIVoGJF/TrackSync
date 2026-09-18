@@ -16,6 +16,7 @@ class DeadlineTaskCompletion(Base):
     start_date = Column(Date, nullable=False)
     deadline_date = Column(Date, nullable=False)
     completed = Column(Boolean, default=False, nullable=False)
+    completion_date = Column(Date, nullable=True)
     completed_at = Column(DateTime(timezone=True), nullable=True)
     
     task = relationship("Task", back_populates="deadline_completion")

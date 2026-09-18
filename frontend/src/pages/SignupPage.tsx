@@ -22,8 +22,6 @@ export function SignupPage() {
 
         try {
             await signup(username, email, password);
-            // Sign the user straight in rather than bouncing them back to /login
-            // to re-type what they just typed.
             await login(username, password);
             navigate('/');
         } catch (err: any) {
@@ -39,8 +37,6 @@ export function SignupPage() {
             <div className="login-brand-panel">
                 <img src={logoWordmark} alt="TrackSync" className="login-logo" />
             </div>
-
-            <div className="login-divider" aria-hidden="true" />
 
             <div className="login-form-panel">
                 <form className="login-form" onSubmit={handleSubmit}>

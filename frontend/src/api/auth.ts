@@ -26,7 +26,8 @@ export async function login(identifier: string, password: string): Promise<Token
 }
 
 export async function signup(username: string, email: string, password: string): Promise<{ message: string; user_id: string }> {
-    const { data } = await apiClient.post('/auth/signup', { username, email, password });
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const { data } = await apiClient.post('/auth/signup', { username, email, password, timezone });
     return data;
 }
 

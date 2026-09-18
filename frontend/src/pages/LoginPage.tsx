@@ -34,8 +34,6 @@ export function LoginPage() {
                 <img src={logoWordmark} alt="TrackSync" className="login-logo" />
             </div>
 
-            <div className="login-divider" aria-hidden="true" />
-
             <div className="login-form-panel">
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h1>Log in</h1>
