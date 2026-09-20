@@ -56,6 +56,10 @@ class DeadlineTaskResponse(BaseModel):
     task_type: TaskType
     deadline: DeadlineResponse
 
+class DashboardCollectionResponse(BaseModel):
+    collection_id: UUID
+    name: str
+    task_ids: list[UUID]
 
 class DashboardResponse(BaseModel):
     year: int
@@ -65,4 +69,5 @@ class DashboardResponse(BaseModel):
         | WeeklyTaskResponse
         | DeadlineTaskResponse
     ]
+    collections: list[DashboardCollectionResponse]
     activity: list[ActivityResponse]
