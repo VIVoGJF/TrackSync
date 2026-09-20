@@ -54,7 +54,7 @@ export function HomePage() {
   const activity = activityQuery.data?.activity ?? [];
 
   const yearAgo = new Date(today);
-  yearAgo.setDate(yearAgo.getDate() - 364);
+  yearAgo.setFullYear(yearAgo.getFullYear() - 1);
   const yearAgoStr = toLocalDateString(yearAgo);
 
   const gaugeBreakdown = computeGaugeBreakdown(dashboard.tasks);

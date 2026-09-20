@@ -15,6 +15,12 @@ function isTaskActiveToday(task: DashboardTask, todayStr: string): boolean {
     return task.active_period.some((period) => isDateInRange(todayStr, period.start_date, period.end_date));
 }
 
+const TYPE_ORDER: Record<TodaysTaskItem['taskType'], number> = {
+    DAILY: 0,
+    WEEKLY: 1,
+    DEADLINE: 2,
+};
+
 export function getTodaysTasks(tasks: DashboardTask[], today: Date, todayStr: string): TodaysTaskItem[] {
     const items: TodaysTaskItem[] = [];
 
@@ -32,5 +38,6 @@ export function getTodaysTasks(tasks: DashboardTask[], today: Date, todayStr: st
         }
     }
 
-    return items;
+    // Stable sort: within each type, tasks keep whatever order the backend sent them in.
+    return items.sort((a, b) => TYPE_ORDER[a.taskType] - TYPE_ORDER[b.taskType]);
 }
