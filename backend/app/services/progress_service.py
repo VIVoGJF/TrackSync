@@ -70,14 +70,8 @@ async def toggle_weekly_progress(db: AsyncSession, task: Task, requested_date: d
     progress = await _get_monthly_progress(db, task.id, requested_date.year, requested_date.month)
     
     week_index = _get_week_index(requested_date)
-    
-    updated_status, new_status = await _toggle_status_bit(progress.status_string, week_index)
-    
-    progress.status_string = updated_status
-    progress.updated_at = datetime.now()
-    
     week_number = week_index + 1
-    
+
     result = await db.execute(
         select(WeeklyTaskCompletion)
         .where(
@@ -87,26 +81,44 @@ async def toggle_weekly_progress(db: AsyncSession, task: Task, requested_date: d
             WeeklyTaskCompletion.week_number == week_number,
         )
     )
-    
-    completion = result.scalar_one_or_none()
-    
-    if new_status == 1 :
-        if completion is None:
-            completion = WeeklyTaskCompletion(
-                task_id=task.id,
-                year=requested_date.year,
-                month=requested_date.month,
-                week_number=week_number,
-                completion_date=requested_date,
-            )
-            db.add(completion)    
-    else:
-        if completion is not None:
-            await db.delete(completion)
-            
-    return new_status, week_index
 
-async def toggle_deadline_progress(db: AsyncSession, task: Task) -> int:
+    completion = result.scalar_one_or_none()
+
+    if completion is None:
+        progress.status_string = (
+            progress.status_string[:week_index]
+            + "1"
+            + progress.status_string[week_index + 1:]
+        )
+        progress.updated_at = datetime.now()
+
+        completion = WeeklyTaskCompletion(
+            task_id=task.id,
+            year=requested_date.year,
+            month=requested_date.month,
+            week_number=week_number,
+            completion_date=requested_date,
+        )
+
+        db.add(completion)
+
+        return 1, week_index
+
+    if completion.completion_date != requested_date:
+        raise ValueError("Weekly task is already completed for this week.")
+
+    progress.status_string = (
+        progress.status_string[:week_index]
+        + "0"
+        + progress.status_string[week_index + 1:]
+    )
+    progress.updated_at = datetime.now()
+
+    await db.delete(completion)
+
+    return 0, week_index
+
+async def toggle_deadline_progress(db: AsyncSession, task: Task, requested_date: date) -> int:
     result = await db.execute(
         select(DeadlineTaskCompletion)
         .where(
@@ -118,14 +130,19 @@ async def toggle_deadline_progress(db: AsyncSession, task: Task) -> int:
 
     if completion is None:
         raise ValueError("Deadline completion record not found.")
+    
+    if requested_date > completion.deadline_date:
+        raise ValueError("Task deadline has already passed.")
 
     new_status = 0 if completion.completed else 1
 
     completion.completed = bool(new_status)
 
     if new_status == 1:
+        completion.completion_date = requested_date
         completion.completed_at = datetime.now()
     else:
+        completion.completion_date = None
         completion.completed_at = None
 
     return new_status

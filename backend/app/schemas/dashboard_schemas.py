@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -20,13 +20,15 @@ class DeadlineResponse(BaseModel):
     start_date: date
     deadline_date: date
     completed: bool
-    completed_at: datetime | None
+    completion_date: date | None
 
 
 class ActivityResponse(BaseModel):
     date: date
     count: int
 
+class YearlyActivityResponse(BaseModel):
+    activity: list[ActivityResponse]
 
 class DailyTaskResponse(BaseModel):
     task_id: UUID

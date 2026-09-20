@@ -11,7 +11,7 @@ from app.db.models import Task, TaskType, User
 from app.schemas.progress_schemas import ProgressResponse, ProgressToggle
 from app.services.daily_activity_service import update_daily_activity
 from app.services.progress_service import toggle_daily_progress, toggle_deadline_progress, toggle_weekly_progress
-
+from app.core.timezones import get_user_today
 
 router = APIRouter(prefix="/progress", tags=["Progress"])
 
@@ -32,7 +32,7 @@ async def update_daily_activity_background(user_id: UUID, activity_date: date, d
 
 @router.patch("/{task_id}", response_model=ProgressResponse)
 async def toggle_progress(task_id: UUID, payload: ProgressToggle, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
-    current_date = date.today()
+    current_date = get_user_today(current_user)
 
     if payload.date != current_date:
         raise HTTPException(
@@ -62,24 +62,43 @@ async def toggle_progress(task_id: UUID, payload: ProgressToggle, background_tas
         )
 
     if task.task_type == TaskType.DAILY:
-        new_status = await toggle_daily_progress(
-            db=db,
-            task=task,
-            requested_date=payload.date,
-        )
+        try:
+            new_status = await toggle_daily_progress(
+                db=db,
+                task=task,
+                requested_date=payload.date,
+            )
+        except ValueError as exc:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=str(exc),
+                )
 
     elif task.task_type == TaskType.WEEKLY:
-        new_status, _ = await toggle_weekly_progress(
-            db=db,
-            task=task,
-            requested_date=payload.date,
-        )
+        try:
+            new_status, _ = await toggle_weekly_progress(
+                db=db,
+                task=task,
+                requested_date=payload.date,
+            )
+        except ValueError as exc:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=str(exc),
+                )
 
     elif task.task_type == TaskType.DEADLINE:
-        new_status = await toggle_deadline_progress(
-            db=db,
-            task=task,
-        )
+        try:
+            new_status = await toggle_deadline_progress(
+                db,
+                task,
+                requested_date = payload.date,
+            )
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(exc),
+            )
 
     else:
         raise HTTPException(

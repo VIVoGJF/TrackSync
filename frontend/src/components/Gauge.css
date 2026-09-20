@@ -1,0 +1,112 @@
+.gauge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    width: 100%;
+}
+
+/* The ring, its centre text and the bottom text all live in this one box,
+   so the absolutely positioned text is placed relative to the ring only. */
+.gauge-ring {
+    position: relative;
+    margin-left: 25px;
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.gauge-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* Centred over the ring, nudged up to leave room for the text in the opening. */
+.gauge-center {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+
+.gauge-percent {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text-primary);
+}
+
+.gauge-percent-sign {
+    margin-left: 2px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.gauge-caption {
+    margin-top: 4px;
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.gauge-stats {
+    flex: 1;
+    max-width: 280px;
+    align-self: stretch;
+    justify-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+ 
+.gauge-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: var(--space-2) var(--space-4);
+    background: var(--level-0);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+}
+
+.gauge-stat-progress {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.gauge-stat-bar {
+    width: 120px;
+    flex: none;
+    height: 5px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text-secondary) 15%, transparent);
+    overflow: hidden;
+}
+
+.gauge-stat-bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.gauge-stat-label {
+    font-weight: 600;
+}
+
+.gauge-stat-value {
+    font-weight: 600;
+    color: var(--text-primary);
+    width: 40px;
+    flex: none;
+    text-align: right;
+}
