@@ -20,7 +20,7 @@ export function LoginPage() {
 
         try {
             await login(identifier, password);
-            navigate('/');
+            navigate('/profile');
         } catch {
             setError('Incorrect email/username or password.');
         } finally {

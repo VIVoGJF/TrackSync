@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.auth_routes import router as auth_router
 from app.api.task_routes import router as task_routes
 from app.api.progress_routes import router as progress_router
+from app.api.collection_routes import router as collection_router
 from app.api.dashboard_routes import router as dashboard_router
 
 
@@ -20,6 +21,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(task_routes)
 app.include_router(progress_router)
+app.include_router(collection_router)
 app.include_router(dashboard_router)
 
 

@@ -5,3 +5,5 @@ from .recurring_task_progress import RecurringTaskProgress
 from .deadline_task_completion import DeadlineTaskCompletion
 from .daily_activity import DailyActivity
 from .weekly_task_completion import WeeklyTaskCompletion
+from .task_collection import TaskCollection
+from .collection_link import CollectionTaskLink

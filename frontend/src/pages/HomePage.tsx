@@ -4,14 +4,14 @@ import { getDashboard } from '../api/dashboard';
 import { getActivity } from '../api/dashboard';
 import { computeGaugeBreakdown } from '../lib/gauge';
 import { buildHeatmapGrid, getHeatmapStats } from '../lib/heatmap';
-import { getTodaysTasks } from '../lib/todaysTasks';
+import { getTasksBoardItems } from '../lib/taskBoard';
 import { toLocalDateString } from '../lib/dateIndex';
 import { TopBar } from '../components/TopBar';
 import { ProfilePanel } from '../components/ProfilePanel';
 import { Gauge } from '../components/Gauge';
 import { MiniCalendar } from '../components/MiniCalendar';
 import { YearlyHeatmap } from '../components/YearlyHeatmap';
-import { TodaysTasks } from '../components/TodaysTasks';
+import { TaskBoard } from '../components/TaskBoard';
 import './HomePage.css';
 
 export function HomePage() {
@@ -60,7 +60,7 @@ export function HomePage() {
   const gaugeBreakdown = computeGaugeBreakdown(dashboard.tasks);
   const heatmapMonths = buildHeatmapGrid(activity, yearAgoStr, todayStr);
   const heatmapStats = getHeatmapStats(activity);
-  const todaysTasks = getTodaysTasks(dashboard.tasks, today, todayStr);
+  const todaysTasks = getTasksBoardItems(dashboard.tasks, today, todayStr);
 
   return (
     <div className="home-page">
@@ -79,7 +79,7 @@ export function HomePage() {
 
           <YearlyHeatmap months={heatmapMonths} stats={heatmapStats} />
 
-          <TodaysTasks items={todaysTasks} />
+          <TaskBoard items={todaysTasks} collections={dashboard.collections} />
           <div style={{ padding: 32 }}>
             <button className="primary-button" onClick={logout} style={{ width: 'auto', padding: '8px 16px' }}>
               Log out

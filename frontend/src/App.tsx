@@ -16,14 +16,14 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route
-              path="/"
+              path="/profile"
               element={
                 <ProtectedRoute>
                   <HomePage />
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

@@ -19,26 +19,28 @@ export function YearlyHeatmap({ months, stats }: YearlyHeatmapProps) {
                 </span>
             </div>
 
-            <div className="heatmap-months">
-                {months.map((block, i) => (
-                    <div className="heatmap-month-block" key={`${block.label}-${i}`}>
-                        <div className="heatmap-columns">
-                            {block.columns.map((column, colIndex) => (
-                                <div className="heatmap-column" key={colIndex}>
-                                    {column.map((day, rowIndex) => (
-                                        <div
-                                            key={rowIndex}
-                                            className={`heatmap-cell${day.date === null ? ' heatmap-cell--empty' : ''}`}
-                                            data-level={day.date === null ? undefined : day.level}
-                                            title={day.date ?? undefined}
-                                        />
-                                    ))}
-                                </div>
-                            ))}
+            <div className="heatmap-scroll">
+                <div className="heatmap-months">
+                    {months.map((block, i) => (
+                        <div className="heatmap-month-block" key={`${block.label}-${i}`}>
+                            <div className="heatmap-columns">
+                                {block.columns.map((column, colIndex) => (
+                                    <div className="heatmap-column" key={colIndex}>
+                                        {column.map((day, rowIndex) => (
+                                            <div
+                                                key={rowIndex}
+                                                className={`heatmap-cell${day.date === null ? ' heatmap-cell--empty' : ''}`}
+                                                data-level={day.date === null ? undefined : day.level}
+                                                title={day.date ?? undefined}
+                                            />
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                            <span className="heatmap-month-label">{block.label}</span>
                         </div>
-                        <span className="heatmap-month-label">{block.label}</span>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );
