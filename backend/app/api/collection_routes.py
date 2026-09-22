@@ -9,7 +9,7 @@ from app.db.models import Task, User, CollectionTaskLink, TaskCollection
 from app.schemas.collection_schemas import CollectionCreate, CollectionResponse
 from app.api.auth_routes import get_current_user
 
-router = APIRouter(prefix="/collctions", tags=["Collections"])
+router = APIRouter(prefix="/collections", tags=["Collections"])
 
 
 @router.post("/", response_model=CollectionResponse, status_code=status.HTTP_201_CREATED)

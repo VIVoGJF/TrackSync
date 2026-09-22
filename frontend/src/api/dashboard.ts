@@ -38,8 +38,14 @@ export interface DeadlineTask {
         start_date: string;
         deadline_date: string;
         completed: boolean;
-        completed_at: string | null;
+        completion_date: string | null;
     };
+}
+
+export interface DashboardCollection {
+    collection_id: string;
+    name: string;
+    task_ids: string[];
 }
 
 export type DashboardTask = DailyTask | WeeklyTask | DeadlineTask;
@@ -53,12 +59,15 @@ export interface DashboardResponse {
     year: number;
     month: number;
     tasks: DashboardTask[];
+    collections: DashboardCollection[];
     activity: DashboardActivity[];
+    
 }
 
 export interface YearlyActivityResponse {
   activity: DashboardActivity[];
 }
+
 
 export async function getActivity(): Promise<YearlyActivityResponse> {
   const { data } = await apiClient.get<YearlyActivityResponse>('/dashboard/activity');

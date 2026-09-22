@@ -1,11 +1,10 @@
-.todays-tasks {
+.taskboard {
     background: var(--bg-surface);
     border-radius: var(--radius-md);
     padding: var(--space-4);
 }
 
-/* Tab bar. The active tab gets a filled box, the others are plain gray. */
-.todays-tasks-heading {
+.taskboard-heading {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -13,7 +12,7 @@
     margin: 0 0 var(--space-4);
 }
 
-.todays-tab {
+.taskboard-tab {
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -21,34 +20,34 @@
     border: none;
     border-radius: var(--radius-sm);
     background: transparent;
-    color: var(--text-secondary); /* inactive tab gray */
+    color: var(--text-secondary);
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: color 0.15s, background-color 0.15s;
 }
 
-.todays-tab:hover {
+.taskboard-tab:hover {
     color: var(--text-primary);
 }
 
-.todays-tab:focus-visible {
+.taskboard-tab:focus-visible {
     outline: 2px solid var(--level-2);
     outline-offset: 2px;
 }
 
-.todays-tab-active {
-    background: var(--bg-card); /* same box colour as the task rows */
+.taskboard-tab-active {
+    background: var(--bg-card);
     color: var(--text-primary);
 }
 
-.todays-tasks-empty {
+.taskboard-empty {
     color: var(--text-muted);
     font-size: 13px;
     margin: 0;
 }
 
-.todays-tasks-list {
+.taskboard-list {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -57,7 +56,7 @@
     gap: var(--space-2);
 }
 
-.todays-task-row {
+.taskboard-row {
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -67,29 +66,37 @@
 }
 
 /* One block per task type, with a small muted label above its rows. */
-.todays-task-groups {
+
+.taskboard-groups {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
 }
 
-.todays-task-group-label {
+.taskboard-group-label {
     margin: 0 0 var(--space-2);
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-muted); /* swap for whichever gray you prefer */
+    color: var(--text-muted);
 }
 
-.todays-task-title {
+.taskboard-title {
     flex: 1;
     font-size: 14px;
 }
 
+.taskboard-deadline {
+    margin-left: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
 /* Same minimum height in both states, so the row doesn't jump when toggled. */
+
 .mark-done-button,
-.todays-task-actions {
+.taskboard-actions {
     box-sizing: border-box;
     min-height: 30px;
 }
@@ -115,7 +122,8 @@
 }
 
 /* Done state: "✓ Done" label with a quiet Undo next to it. */
-.todays-task-actions {
+
+.taskboard-actions {
     display: flex;
     margin-right: 5px;
     align-items: center;
@@ -123,7 +131,7 @@
     flex-shrink: 0;
 }
 
-.todays-task-done-label {
+.taskboard-done-label {
     display: inline-flex;
     align-items: center;
     gap: 6px;

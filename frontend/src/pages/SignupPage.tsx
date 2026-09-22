@@ -23,7 +23,7 @@ export function SignupPage() {
         try {
             await signup(username, email, password);
             await login(username, password);
-            navigate('/');
+            navigate('/profile');
         } catch (err: any) {
             const detail = err?.response?.data?.detail;
             setError(typeof detail === 'string' ? detail : 'Could not create account.');
