@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import './ProfilePanel.css';
 
 interface ProfilePanelProps {
@@ -5,6 +6,8 @@ interface ProfilePanelProps {
 }
 
 export function ProfilePanel({ username }: ProfilePanelProps) {
+    const navigate = useNavigate();
+
     return (
         <aside className="profile-panel">
             <div className="profile-avatar" aria-hidden="true" />
@@ -14,7 +17,7 @@ export function ProfilePanel({ username }: ProfilePanelProps) {
             </button>
 
             <nav className="profile-nav">
-                <button className="nav-item nav-item-active" type="button">
+                <button className="nav-item nav-item-active" type="button" onClick={() => navigate('/dashboard')}>
                     Dashboard
                 </button>
                 <button className="nav-item nav-item-disabled" type="button" disabled>

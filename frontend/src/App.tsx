@@ -6,6 +6,7 @@ import { ProtectedRoute } from './context/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { HomePage } from './pages/HomePage';
+import { DashboardPage } from './pages/DashboardPage';
 
 export default function App() {
   return (
@@ -20,6 +21,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
                 </ProtectedRoute>
               }
             />
