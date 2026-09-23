@@ -16,11 +16,52 @@ function isTaskDone(task: DashboardTask, today: Date): boolean {
 }
 
 function patchTask(task: DashboardTask, today: Date): DashboardTask {
+    const todayStr = toLocalDateString(today);
+
     if (task.task_type === 'DEADLINE') {
-        return { ...task, deadline: { ...task.deadline, completed: !task.deadline.completed } };
+        const completed = !task.deadline.completed;
+
+        return {
+            ...task,
+            deadline: {
+                ...task.deadline,
+                completed,
+                completion_date: completed ? todayStr : null,
+            },
+        };
     }
-    const index = task.task_type === 'DAILY' ? getDayIndex(today) : getWeekIndex(today);
-    return { ...task, progress: flipBit(task.progress, index) };
+
+    if (task.task_type === 'WEEKLY') {
+        const index = getWeekIndex(today);
+
+        const completedToday = task.weekly_completions.some(
+            (completion) => completion.completion_date === todayStr,
+        );
+
+        return {
+            ...task,
+            progress: flipBit(task.progress, index),
+            weekly_completions: completedToday
+                ? task.weekly_completions.filter(
+                    (completion) =>
+                        completion.completion_date !== todayStr,
+                )
+                : [
+                    ...task.weekly_completions,
+                    {
+                        week: index,
+                        completion_date: todayStr,
+                    },
+                ],
+        };
+    }
+
+    const index = getDayIndex(today);
+
+    return {
+        ...task,
+        progress: flipBit(task.progress, index),
+    };
 }
 
 function bumpActivity(activity: DashboardActivity[], dateStr: string, delta: number): DashboardActivity[] {

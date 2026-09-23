@@ -1,8 +1,13 @@
 .yearly-heatmap {
+    --scrollbar-track: var(--level-0);
+    --scrollbar-thumb: var(--text-muted);
+    --scrollbar-thumb-hover: var(--text-secondary);
+
     background: var(--bg-surface);
     border-radius: var(--radius-md);
+    /* Normal padding on all sides. Safe here because this element itself
+       never scrolls - only its .heatmap-scroll child does. */
     padding: var(--space-4) 15px;
-    overflow-x: auto;
 }
 
 .heatmap-stats {
@@ -14,7 +19,7 @@
     margin-bottom: var(--space-4);
 }
 
-.total-count{
+.total-count {
     font-size: 20px;
 }
 
@@ -22,10 +27,25 @@
     color: var(--text-primary);
 }
 
+/* The only element that scrolls. Sits inside .yearly-heatmap's padding, so
+   the card's 15px side padding already keeps it (and its scrollbar) off the
+   card's edges - no extra spacing needed here for that.
+   Background matches the card: it's not a visible box, just a frame. */
+.heatmap-scroll {
+    overflow-x: auto;
+    overflow-y: hidden; /* guards against a stray vertical scrollbar clipping the padding below */
+    padding-bottom: 4px; /* space between the month labels and the scrollbar */
+    background: var(--bg-surface);
+}
+
 .heatmap-months {
     display: flex;
     justify-content: space-between;
-    gap: 6px;
+    gap: 5px;
+    /* Grows to fit all the months, but never gets narrower than
+       .heatmap-scroll, so space-between still spreads them out. */
+    width: max-content;
+    min-width: 100%;
 }
 
 .heatmap-month-block {
@@ -76,4 +96,54 @@
 .heatmap-month-label {
     font-size: 13px;
     color: var(--text-secondary);
+}
+
+/* ---- Scrollbar (Chrome, Edge, Safari, Android) ---- */
+.heatmap-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+
+.heatmap-scroll::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 5px;
+}
+
+.heatmap-scroll::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 5px;
+}
+
+.heatmap-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Arrow buttons at both ends. The arrow colour is baked into the SVG
+   (%23888 is #888888), so change it there if you change the thumb colour. */
+.heatmap-scroll::-webkit-scrollbar-button:single-button {
+    display: block;
+    width: 14px;
+    height: 10px;
+    background-color: var(--scrollbar-track);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 8px 8px;
+}
+
+.heatmap-scroll::-webkit-scrollbar-button:horizontal:decrement {
+    border-radius: 5px 0 0 5px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M6 1L2 4l4 3z' fill='%23888'/%3E%3C/svg%3E");
+}
+
+.heatmap-scroll::-webkit-scrollbar-button:horizontal:increment {
+    border-radius: 0 5px 5px 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M2 1l4 3-4 3z' fill='%23888'/%3E%3C/svg%3E");
+}
+
+/* Firefox doesn't support the ::-webkit-scrollbar rules above (and has no
+   arrow buttons), so give it the thin standard scrollbar in the same colours. */
+@supports not selector(::-webkit-scrollbar) {
+    .heatmap-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
 }

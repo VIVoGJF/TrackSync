@@ -1,0 +1,417 @@
+.dashboard-task-board {
+    /* Single source of truth for cell sizing and both gap levels — JS no
+       longer carries its own copy of these numbers, so they can't drift
+       out of sync the way CELL_SIZE (13) vs the CSS width (15) just did. */
+    --cell-size: 13px;
+    --cell-gap: 8px;
+    --week-gap: 15px;
+
+    width: 100%;
+    min-height: 260px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-task-board-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-4);
+}
+
+.dashboard-task-board-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+}
+
+.dashboard-task-board-tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s, background-color 0.15s;
+}
+
+.dashboard-task-board-tab:hover {
+    color: var(--text-primary);
+}
+
+.dashboard-task-board-tab:focus-visible {
+    outline: 2px solid var(--level-2);
+    outline-offset: 2px;
+}
+
+.dashboard-task-board-tab.active {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.dashboard-task-board-add-collection {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.15s, background-color 0.15s;
+}
+
+.dashboard-task-board-add-collection:hover {
+    color: var(--text-primary);
+}
+
+.dashboard-task-board-add-collection:focus-visible {
+    outline: 2px solid var(--level-2);
+    outline-offset: 2px;
+}
+
+/* ---- Three-column body: titles | scrollable grid | progress ---- */
+
+.dashboard-task-board-body {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    overflow-x: auto;
+}
+
+.dashboard-task-titles-col {
+    width: 150px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    min-width: 0;
+}
+
+.dashboard-task-progress-col {
+    width: 210px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.dashboard-task-grid-scroll {
+    flex: 1;
+    min-width: 100px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+}
+
+.dashboard-task-grid-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    width: max-content; /* was a JS-computed inline width — the flex layout
+                            below now sizes itself naturally, so nothing
+                            needs to be measured in JS anymore */
+}
+
+.dashboard-task-grid-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+.dashboard-task-grid-scroll::-webkit-scrollbar-track {
+    background: var(--level-0);
+    border-radius: 4px;
+}
+.dashboard-task-grid-scroll::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 4px;
+}
+.dashboard-task-grid-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+@supports not selector(::-webkit-scrollbar) {
+    .dashboard-task-grid-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: var(--text-muted) var(--level-0);
+    }
+}
+
+/* Every row is pinned to this exact height in ALL THREE columns — that's
+   the entire alignment mechanism between titles / grid / progress. */
+.dashboard-task-header-spacer,
+.dashboard-task-calendar-header-row,
+.dashboard-task-group-label,
+.dashboard-task-group-label-spacer,
+.dashboard-task-row {
+    height: 18px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+.dashboard-task-group-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dashboard-task-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.dashboard-task-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    margin-left: 10px;
+    color: var(--text-primary);
+}
+
+.dashboard-task-action-button {
+    flex: 0 0 24px;
+
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: transparent;
+    color: var(--text-muted);
+
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.dashboard-task-action-button:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+/* Weeks laid out with a real gap between them (--week-gap) — this fully
+   replaces the old box-shadow divider line. Cells within a week use the
+   much tighter --cell-gap. Used identically by the day-label header row
+   and every task's cell row via the WeekGrid component, so they can never
+   fall out of alignment with each other. */
+.dashboard-task-weeks-row {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: var(--week-gap);
+}
+
+.dashboard-task-week-row {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: var(--cell-gap);
+}
+
+.dashboard-task-day-label {
+    width: var(--cell-size);
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.dashboard-task-empty {
+    margin: var(--space-4) 0;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.dashboard-task-cell {
+    width: var(--cell-size);
+    aspect-ratio: 1;
+    flex-shrink: 0;
+    padding: 0;
+
+    border: 1px solid transparent;
+    border-radius: 3px;
+
+    box-sizing: border-box;
+    transition: filter 0.15s ease;
+}
+
+.dashboard-task-cell-today {
+    background: var(--bg-card);
+    border-color: var(--border-subtle);
+    cursor: pointer;
+}
+
+.dashboard-task-cell-inactive {
+    background: var(--bg-card);
+    opacity: 0.45;
+}
+
+.dashboard-task-cell-completed-today,
+.dashboard-task-cell-completed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--level-2);
+    border-color: var(--level-2);
+    opacity: 1;
+}
+
+.dashboard-task-cell-completed-today {
+    background: var(--level-3);
+    border-color: var(--level-3);
+}
+
+.dashboard-task-cell-completed-today::after,
+.dashboard-task-cell-completed::after {
+    content: '✓';
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.dashboard-task-cell-outside {
+    background: transparent;
+    border-color: var(--border-subtle);
+    opacity: 0.3;
+}
+
+.dashboard-task-cell:disabled {
+    cursor: default;
+}
+
+.dashboard-task-cell-today:not(:disabled):hover {
+    filter: brightness(1.2);
+}
+
+.dashboard-task-cell-today:not(:disabled):focus-visible {
+    outline: 2px solid var(--level-2);
+    outline-offset: 1px;
+}
+
+.dashboard-task-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.dashboard-task-progress-track {
+    flex: 1;
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--bg-card);
+}
+
+.dashboard-task-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--level-2);
+    transition: width 0.3s ease;
+}
+
+.dashboard-task-progress-value {
+    flex-shrink: 0;
+    width: 30px;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.dashboard-task-board-collection-actions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+}
+
+.dashboard-task-board-button-edit {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+
+.dashboard-task-board-button-edit:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.dashboard-task-board-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.dashboard-task-board-button {
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+}
+
+.dashboard-task-board-button:focus-visible {
+    outline: 2px solid var(--level-2);
+    outline-offset: 2px;
+}
+
+.dashboard-task-board-button-add {
+    background: #11632a46;
+    color: #2db55d;
+}
+
+.dashboard-task-board-button-add:hover {
+    background: #2b9343c3;
+    color: var(--text-primary)
+}
+
+.dashboard-task-board-button-archive {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+
+.dashboard-task-board-button-archive:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}

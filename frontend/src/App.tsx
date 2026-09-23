@@ -6,6 +6,7 @@ import { ProtectedRoute } from './context/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { HomePage } from './pages/HomePage';
+import { DashboardPage } from './pages/DashboardPage';
 
 export default function App() {
   return (
@@ -16,14 +17,22 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route
-              path="/"
+              path="/profile"
               element={
                 <ProtectedRoute>
                   <HomePage />
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

@@ -6,8 +6,6 @@
     width: 100%;
 }
 
-/* The ring, its centre text and the bottom text all live in this one box,
-   so the absolutely positioned text is placed relative to the ring only. */
 .gauge-ring {
     position: relative;
     margin-left: 25px;
@@ -21,7 +19,6 @@
     height: auto;
 }
 
-/* Centred over the ring, nudged up to leave room for the text in the opening. */
 .gauge-center {
     position: absolute;
     left: 0;
@@ -55,6 +52,7 @@
 
 .gauge-stats {
     flex: 1;
+    min-width: 0;
     max-width: 280px;
     align-self: stretch;
     justify-self: flex-end;
@@ -63,13 +61,12 @@
     gap: var(--space-3);
 }
 
- 
 .gauge-stat {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
     gap: 15px;
     padding: var(--space-2) var(--space-4);
     background: var(--level-0);
@@ -77,15 +74,23 @@
     font-size: 13px;
 }
 
+.gauge-stat-label {
+    font-weight: 600;
+    flex: 0 0 64px;             /* fixed column width, sized for "Deadline" (the longest label) — this is what makes every bar START at the same x position */
+    white-space: nowrap;
+}
+
 .gauge-stat-progress {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 2px;                          /* was: 5px — a bit more breathing room at 100% fill */
+    flex: 1;
+    min-width: 0;
 }
 
 .gauge-stat-bar {
-    width: 120px;
-    flex: none;
+    flex: 1;
+    min-width: 24px;
     height: 5px;
     border-radius: 999px;
     background: color-mix(in srgb, var(--text-secondary) 15%, transparent);
@@ -99,14 +104,11 @@
     transition: width 0.3s ease;
 }
 
-.gauge-stat-label {
-    font-weight: 600;
-}
-
 .gauge-stat-value {
     font-weight: 600;
     color: var(--text-primary);
-    width: 40px;
-    flex: none;
+    flex: 0 0 7ch;
     text-align: right;
+    font-variant-numeric: tabular-nums; 
+    white-space: nowrap;
 }

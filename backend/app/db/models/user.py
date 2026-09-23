@@ -23,3 +23,4 @@ class User(Base):
     
     tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
     activities = relationship("DailyActivity", back_populates="user", cascade="all, delete-orphan")
+    collection = relationship("TaskCollection", back_populates="user", cascade="all, delete-orphan")

@@ -1,0 +1,162 @@
+.taskboard {
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+}
+
+.taskboard-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+}
+
+.taskboard-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s, background-color 0.15s;
+}
+
+.taskboard-tab:hover {
+    color: var(--text-primary);
+}
+
+.taskboard-tab:focus-visible {
+    outline: 2px solid var(--level-2);
+    outline-offset: 2px;
+}
+
+.taskboard-tab-active {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.taskboard-empty {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin: 0;
+}
+
+.taskboard-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.taskboard-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+}
+
+/* One block per task type, with a small muted label above its rows. */
+
+.taskboard-groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.taskboard-group-label {
+    margin: 0 0 var(--space-2);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.taskboard-title {
+    flex: 1;
+    font-size: 14px;
+}
+
+.taskboard-deadline {
+    margin-left: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Same minimum height in both states, so the row doesn't jump when toggled. */
+
+.mark-done-button,
+.taskboard-actions {
+    box-sizing: border-box;
+    min-height: 30px;
+}
+
+.mark-done-button {
+    background: var(--level-2);
+    color: #0b1a0f;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.mark-done-button:hover:not(:disabled) {
+    background: var(--level-1);
+}
+
+.mark-done-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Done state: "✓ Done" label with a quiet Undo next to it. */
+
+.taskboard-actions {
+    display: flex;
+    margin-right: 5px;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
+}
+
+.taskboard-done-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--level-2);
+}
+
+.undo-button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 12px;
+    color: var(--danger);
+    opacity: 0.6;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.undo-button:hover:not(:disabled) {
+    opacity: 1;
+}
+
+.undo-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

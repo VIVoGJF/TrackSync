@@ -1,0 +1,271 @@
+.edit-task-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: var(--space-5);
+
+    background: rgba(16, 18, 20, 0.72);
+}
+
+.edit-task-modal {
+    width: min(460px, 100%);
+
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-panel);
+
+    overflow: hidden;
+
+    font-family: var(--font-ui);
+}
+
+/* Header */
+
+.edit-task-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: var(--space-5);
+}
+
+.edit-task-heading {
+    min-width: 0;
+}
+
+.edit-task-heading h2 {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25;
+
+    overflow-wrap: anywhere;
+}
+
+.edit-task-type {
+    display: inline-block;
+
+    margin-top: var(--space-2);
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.edit-task-close {
+    flex: 0 0 32px;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: transparent;
+    color: var(--text-secondary);
+
+    font-family: inherit;
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.edit-task-close:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.edit-task-close:disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+/* Content */
+
+.edit-task-content {
+    padding: 0 var(--space-5) var(--space-6);
+}
+
+.edit-description-header {
+    display: inline-block;
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.edit-task-description {
+    margin-top: 2px;
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+}
+
+/* Deadline */
+
+.edit-task-deadline-row {
+    display: flex;
+    align-items: flex-end;
+
+    margin-top: var(--space-4);
+    gap: var(--space-3);
+}
+
+.edit-task-deadline-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.edit-task-deadline-content label {
+    display: block;
+
+    margin-bottom: var(--space-2);
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.edit-task-deadline-content input {
+    width: 100%;
+    box-sizing: border-box;
+
+    height: 40px;
+
+    padding: 0 var(--space-3);
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    font-family: var(--font-ui);
+    font-size: 14px;
+
+    outline: none;
+}
+
+.edit-task-deadline-content input:focus {
+    background: var(--bg-card-hover);
+}
+
+.edit-task-deadline-content input:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.edit-task-save {
+    flex: 0 0 auto;
+
+    height: 40px;
+
+    padding: 0 var(--space-4);
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.edit-task-save:hover {
+    background: var(--bg-card);
+}
+
+.edit-task-save:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Errors */
+
+.edit-task-error {
+    margin: var(--space-3) 0 0;
+
+    color: var(--danger);
+
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Bottom actions */
+
+.edit-task-actions {
+    display: flex;
+    gap: var(--space-3);
+
+    padding: 0 var(--space-5) var(--space-5);
+}
+
+.edit-task-archive,
+.edit-task-delete {
+    flex: 1;
+
+    min-height: 44px;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.edit-task-archive {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+
+.edit-task-archive:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.edit-task-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+
+    background: var(--danger-dim);
+    color: var(--danger);
+}
+
+.edit-task-delete:hover {
+    background: var(--danger);
+    color: var(--text-primary);
+}
+
+.edit-task-archive:disabled,
+.edit-task-delete:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
