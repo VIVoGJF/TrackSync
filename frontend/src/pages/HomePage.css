@@ -40,13 +40,51 @@
     display: flex;
     gap: var(--space-4);
     align-items: stretch;
+
+    /* Lets children respond to THIS row's width (not the viewport's), so the
+       collapse happens exactly when the gauge runs out of room, whether or
+       not the profile panel is currently taking space beside it. */
+    container-type: inline-size;
+    container-name: top-row;
 }
 
 .home-gauge-panel {
     flex: 1;
+    min-width: 0;
     background: var(--bg-surface);
     border-radius: var(--radius-md);
     padding: var(--space-5);
     display: flex;
     justify-content: center;
+
+    /* Same idea as the top row: the gauge reacts to the room the panel
+       actually gives it. Note: queries measure the CONTENT box (panel width
+       minus its padding). */
+    container-type: inline-size;
+    container-name: gauge-panel;
+}
+
+/* Step 1: not enough room for gauge + calendar -> drop the calendar,
+   the gauge panel then takes the full row. ~520 gauge + 260 calendar + 16 gap. */
+@container top-row (max-width: 800px) {
+    .home-top-row .mini-calendar {
+        display: none;
+    }
+}
+
+/* Step 2: phones. The profile panel leaves the layout (it's a fixed sheet now,
+   see ProfilePanel.css), so the main column gets the full width. */
+@media (max-width: 768px) {
+    .home-content {
+        padding: var(--space-4);
+    }
+
+    .home-gauge-panel {
+        padding: var(--space-4);
+    }
+
+    /* Log out is inside the profile sheet on phones. */
+    .home-logout {
+        display: none;
+    }
 }

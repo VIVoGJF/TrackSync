@@ -178,3 +178,39 @@
     color: var(--text-muted);
     padding-bottom: 2px;
 }
+
+/* ---- Phones: metrics only, in a 2x2 grid. The weekly chart leaves this card
+   (DashboardPage renders it in its own card at the bottom of the page). ---- */
+@media (max-width: 768px) {
+    .stats-panel {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .stats-panel > .weekly-contribution {
+        display: none;
+    }
+
+    .stats-panel-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-2);
+        height: auto;
+    }
+
+    .stats-metric {
+        min-width: 0;
+    }
+}
+
+/* The standalone card version of the chart (phones only, see DashboardPage.css):
+   it has no parent height to fill, so it needs its own. */
+.dashboard-weekly-card .weekly-contribution {
+    max-width: 420px;
+    margin: 0 auto;
+    height: auto;
+}
+
+.dashboard-weekly-card .weekly-chart {
+    flex: none;
+    height: 170px;
+}

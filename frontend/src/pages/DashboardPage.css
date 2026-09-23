@@ -20,7 +20,7 @@
 .dashboard-top-row {
     display: flex;
     gap: var(--space-4);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
     align-items: stretch;
 }
 
@@ -42,10 +42,82 @@
 .dashboard-gauge-card {
     display: flex;
     justify-content: center;
+    min-width: 0;
+
+    /* Same container HomePage's gauge panel declares, so the gauge collapses to
+       its compact layout (see Gauge.css) when THIS card runs out of room. */
+    container-type: inline-size;
+    container-name: gauge-panel;
+}
+
+.dashboard-stats-panel {
+    min-width: 0;
+}
+
+/* Phone-only cards: hidden until the media query below. */
+.dashboard-weekly-card {
+    display: none;
+}
+
+/* Profile sheet: only exists on phones (the hamburger opens it). */
+.dashboard-profile-menu {
+    display: none;
 }
 
 .dashboard-loading,
 .dashboard-error {
     padding: var(--space-6);
     color: var(--text-secondary);
+}
+
+/* ---- Phones ----
+   Order: month selector, the four stats, task board, gauge, weekly chart.
+   .dashboard-top-row stops being a box (display: contents) so its two cards
+   become direct children of .dashboard-content and can be interleaved with the
+   task board using `order`. */
+@media (max-width: 768px) {
+    .dashboard-content {
+        padding: var(--space-4);
+        gap: var(--space-3);
+    }
+
+    .dashboard-header {
+        margin-bottom: 0;
+    }
+
+    .dashboard-top-row {
+        display: contents;
+    }
+
+    /* Cards are stacked in a column now: no stretching to fill leftover height. */
+    .dashboard-stats-panel,
+    .dashboard-gauge-card,
+    .dashboard-weekly-card {
+        flex: none;
+        padding: var(--space-4);
+    }
+
+    .dashboard-stats-panel {
+        order: 1;
+    }
+
+    .dashboard-content > .dashboard-task-board {
+        order: 2;
+    }
+
+    .dashboard-gauge-card {
+        order: 3;
+    }
+
+    .dashboard-weekly-card {
+        display: block;
+        order: 4;
+        background: var(--bg-surface);
+        border-radius: var(--radius-md);
+        box-sizing: border-box;
+    }
+
+    .dashboard-profile-menu {
+        display: contents;
+    }
 }
