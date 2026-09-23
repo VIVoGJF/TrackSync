@@ -112,3 +112,73 @@
     font-variant-numeric: tabular-nums; 
     white-space: nowrap;
 }
+
+/* Compact layout. Applies whenever the gauge sits inside a container named
+   "gauge-panel" (HomePage's gauge panel and the dashboard's gauge card both
+   declare one) and that container's content box is narrow.
+   Needs ~470px for the full layout: ring 25 + 200, gap 32, legend ~210.
+   Below that: smaller ring, legend as a row of three tiles (label / value / bar)
+   under it instead of three tall stacked rows. */
+@container gauge-panel (max-width: 480px) {
+    .gauge {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-3);
+    }
+
+    /* Smaller ring, with the centre text scaled down to fit inside it. */
+    .gauge-ring {
+        margin-left: 0;
+        width: min(150px, 100%);
+    }
+
+    .gauge-percent {
+        font-size: 28px;
+    }
+
+    .gauge-percent-sign {
+        font-size: 14px;
+    }
+
+    .gauge-caption {
+        margin-top: 2px;
+        font-size: 13px;
+    }
+
+    /* Legend: one row, three equal tiles. */
+    .gauge-stats {
+        flex: none;
+        flex-direction: row;
+        align-self: stretch;
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+        gap: var(--space-2);
+    }
+
+    .gauge-stat {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        padding: var(--space-2) var(--space-3);
+    }
+
+    .gauge-stat-label {
+        flex: none;
+        font-size: 12px;
+    }
+
+    /* Value on top, bar underneath (DOM order is bar, value). */
+    .gauge-stat-progress {
+        flex: none;
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .gauge-stat-value {
+        flex: none;
+        text-align: left;
+        font-size: 14px;
+    }
+}

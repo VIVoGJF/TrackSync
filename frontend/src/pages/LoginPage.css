@@ -108,3 +108,38 @@
 .form-footer a:hover {
     text-decoration: underline;
 }
+
+
+@media (max-width: 768px) {
+    .login-screen {
+        /* How far down the top of the form sits. Change this one value to
+           move the form (and the logo, which stays halfway) up or down. */
+        --login-top-gap: clamp(160px, 30vh, 280px);
+
+        flex-direction: column;
+        justify-content: flex-start;
+        min-height: 100dvh;
+        padding: 0 var(--space-4) var(--space-5);
+    }
+
+    /* Fixed-height area above the form, with the logo in the middle of it,
+       so the logo is halfway between the top of the page and the form. */
+    .login-brand-panel {
+        flex: none;
+        height: var(--login-top-gap);
+        background: transparent;         /* single colour */
+        padding: 0;
+    }
+
+    .login-logo {
+        max-width: 220px;
+    }
+
+    /* Starts right under that area, aligned to the top, so the extra signup
+       field pushes the bottom down instead of shifting the top. */
+    .login-form-panel {
+        flex: none;
+        align-items: flex-start;
+        padding: 0;
+    }
+}

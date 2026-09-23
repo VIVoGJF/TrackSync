@@ -1,6 +1,10 @@
 import type { DashboardStats } from '../lib/dashboardStats';
 import './StatsPanel.css';
 
+interface WeeklyChartProps {
+    weeks: DashboardStats['weeklyContribution'];
+}
+
 interface StatsPanelProps {
     stats: DashboardStats;
 }
@@ -34,15 +38,78 @@ function computeYAxisTicks(maxValue: number, targetTickCount = 5): number[] {
     return ticks;
 }
 
-export function StatsPanel({ stats }: StatsPanelProps) {
-    const maxContribution = Math.max(
-        ...stats.weeklyContribution.map((week) => week.completed),
-        1,
-    );
+export function WeeklyChart({ weeks }: WeeklyChartProps) {
+    const maxContribution = Math.max(...weeks.map((week) => week.completed), 1);
 
     const yAxisTicks = computeYAxisTicks(maxContribution);
     const axisMax = yAxisTicks[0];
 
+    return (
+        <div className="weekly-contribution">
+            <h3 className="weekly-contribution-title">
+                Weekly Completion
+            </h3>
+
+            <div className="weekly-chart">
+                <div className="weekly-y-axis">
+                    <div className="weekly-y-axis-inner">
+                        {yAxisTicks.map((tick) => (
+                            <span
+                                key={tick}
+                                style={{
+                                    top: `${100 - (tick / axisMax) * 100}%`,
+                                }}
+                            >
+                                {tick}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="weekly-chart-main">
+                    <div className="weekly-bars">
+                        {weeks.map((week) => {
+                            const height =
+                                week.completed === 0
+                                    ? 3
+                                    : (week.completed / axisMax) * 100;
+
+                            return (
+                                <div
+                                    className="weekly-bar-wrapper"
+                                    key={week.week}
+                                >
+                                    <div className="weekly-bar-container">
+                                        <div
+                                            className="weekly-bar"
+                                            style={{
+                                                height: `${height}%`,
+                                            }}
+                                        >
+                                            <span className="weekly-bar-value">
+                                                {week.completed}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="weekly-x-axis">
+                        {weeks.map((week) => (
+                            <span key={week.week}>
+                                W{week.week}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export function StatsPanel({ stats }: StatsPanelProps) {
     return (
         <div className="stats-panel">
             <div className="stats-panel-metrics">
@@ -69,67 +136,7 @@ export function StatsPanel({ stats }: StatsPanelProps) {
                 </div>
             </div>
 
-            <div className="weekly-contribution">
-                <h3 className="weekly-contribution-title">
-                    Weekly Completion
-                </h3>
-
-                <div className="weekly-chart">
-                    <div className="weekly-y-axis">
-                        <div className="weekly-y-axis-inner">
-                            {yAxisTicks.map((tick) => (
-                                <span
-                                    key={tick}
-                                    style={{
-                                        top: `${100 - (tick / axisMax) * 100}%`,
-                                    }}
-                                >
-                                    {tick}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="weekly-chart-main">
-                        <div className="weekly-bars">
-                            {stats.weeklyContribution.map((week) => {
-                                const height =
-                                    week.completed === 0
-                                        ? 3
-                                        : (week.completed / axisMax) * 100;
-
-                                return (
-                                    <div
-                                        className="weekly-bar-wrapper"
-                                        key={week.week}
-                                    >
-                                        <div className="weekly-bar-container">
-                                            <div
-                                                className="weekly-bar"
-                                                style={{
-                                                    height: `${height}%`,
-                                                }}
-                                            >
-                                                <span className="weekly-bar-value">
-                                                    {week.completed}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        <div className="weekly-x-axis">
-                            {stats.weeklyContribution.map((week) => (
-                                <span key={week.week}>
-                                    W{week.week}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <WeeklyChart weeks={stats.weeklyContribution} />
         </div>
     );
 }

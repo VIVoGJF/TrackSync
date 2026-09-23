@@ -7,9 +7,16 @@ interface ProfilePanelProps {
     isOpen?: boolean;
     /** Phones only: shows a Log out button inside the sheet. */
     onLogout?: () => void;
+    /** Which page the panel is on. The first nav item links to the *other* page. */
+    currentPage?: 'profile' | 'dashboard';
 }
 
-export function ProfilePanel({ username, isOpen = false, onLogout }: ProfilePanelProps) {
+export function ProfilePanel({
+    username,
+    isOpen = false,
+    onLogout,
+    currentPage = 'profile',
+}: ProfilePanelProps) {
     const navigate = useNavigate();
 
     return (
@@ -24,9 +31,15 @@ export function ProfilePanel({ username, isOpen = false, onLogout }: ProfilePane
             </button>
 
             <nav className="profile-nav">
-                <button className="nav-item nav-item-active" type="button" onClick={() => navigate('/dashboard')}>
-                    Dashboard
-                </button>
+                {currentPage === 'dashboard' ? (
+                    <button className="nav-item nav-item-active" type="button" onClick={() => navigate('/profile')}>
+                        Profile
+                    </button>
+                ) : (
+                    <button className="nav-item nav-item-active" type="button" onClick={() => navigate('/dashboard')}>
+                        Dashboard
+                    </button>
+                )}
                 <button className="nav-item nav-item-disabled" type="button" disabled>
                     Groups
                     <span className="nav-badge">Upcoming</span>

@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef } from 'react';
+
 import type { MonthBlock } from '../lib/heatmap';
 import type { HeatmapStats } from '../lib/heatmap';
 import './YearlyHeatmap.css';
@@ -8,6 +10,12 @@ interface YearlyHeatmapProps {
 }
 
 export function YearlyHeatmap({ months, stats }: YearlyHeatmapProps) {
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    useLayoutEffect(() => {
+        const el = scrollRef.current;
+        if (el) el.scrollLeft = el.scrollWidth;
+    }, []);
     return (
         <div className="yearly-heatmap">
             <div className="heatmap-stats">
@@ -19,7 +27,7 @@ export function YearlyHeatmap({ months, stats }: YearlyHeatmapProps) {
                 </span>
             </div>
 
-            <div className="heatmap-scroll">
+            <div className="heatmap-scroll" ref={scrollRef}>
                 <div className="heatmap-months">
                     {months.map((block, i) => (
                         <div className="heatmap-month-block" key={`${block.label}-${i}`}>
