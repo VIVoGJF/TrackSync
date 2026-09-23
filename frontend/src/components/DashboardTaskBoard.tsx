@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import type { DashboardTask, DashboardCollection } from '../api/dashboard';
-import { getDayIndex, toLocalDateString } from '../lib/dateIndex';
+import { getDayIndex, getWeekIndex, toLocalDateString } from '../lib/dateIndex';
+import { useUpdateProgress } from '../hooks/useUpdateProgress';
+import { AddTaskModal } from './AddTaskModal';
+import { EditTaskModal } from './EditTaskModal';
+import { ArchiveModal } from './ArchiveModal';
+import { AddCollectionModal } from './AddCollectionModal';
+import { EditCollectionModal } from './EditCollectionModal';
 import './DashboardTaskBoard.css';
 
 interface DashboardTaskBoardProps {
@@ -30,19 +36,28 @@ function getDaysInMonth(year: number, month: number): number {
     return new Date(year, month, 0).getDate();
 }
 
-function buildCalendarDays(year: number, month: number): CalendarDay[] {
-    const daysInMonth = getDaysInMonth(year, month);
 
-    return Array.from({ length: daysInMonth }, (_, index) => {
+function buildCalendarWeeks(year: number, month: number): CalendarDay[][] {
+    const daysInMonth = getDaysInMonth(year, month);
+    const weeks: CalendarDay[][] = [];
+
+    for (let index = 0; index < daysInMonth; index += 1) {
         const day = index + 1;
         const date = new Date(year, month - 1, day);
+        const weekIndex = getWeekIndex(date);
 
-        return {
+        if (!weeks[weekIndex]) {
+            weeks[weekIndex] = [];
+        }
+
+        weeks[weekIndex].push({
             day,
             date,
             dateString: toLocalDateString(date),
-        };
-    });
+        });
+    }
+
+    return weeks.filter(Boolean);
 }
 
 function isTaskActiveOnDate(task: DashboardTask, dateString: string): boolean {
@@ -119,57 +134,38 @@ function getCellClass(
     return [
         'dashboard-task-cell',
         isToday ? 'dashboard-task-cell-today' : 'dashboard-task-cell-inactive',
-        completed ? 'dashboard-task-cell-completed' : '',
+        completed ? isToday ? 'dashboard-task-cell-completed-today' : 'dashboard-task-cell-completed' : '',
     ]
         .filter(Boolean)
         .join(' ');
 }
 
-function TaskRow({
-    task,
-    days,
-    todayString,
+// Shared by the day-number header row and every task's cell row: both pass
+// their own renderCell function but reuse the exact same week-grouping and
+// markup, so the two can never drift out of alignment with each other. Cell
+// sizing is controlled entirely by CSS (--cell-size), not a pixel constant
+// duplicated here in JS.
+function WeekGrid({
+    weeks,
+    renderCell,
 }: {
-    task: DashboardTask;
-    days: CalendarDay[];
-    todayString: string;
+    weeks: CalendarDay[][];
+    renderCell: (day: CalendarDay) => React.ReactNode;
 }) {
-    const percentage = getTaskCompletionPercentage(task);
-
     return (
-        <div className="dashboard-task-row">
-            <span className="dashboard-task-title">{task.title}</span>
-
-            <div
-                className="dashboard-task-calendar"
-                style={{
-                    gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))`,
-                }}
-            >
-                {days.map((day) => (
-                    <button
-                        type="button"
-                        key={day.dateString}
-                        className={getCellClass(task, day, todayString)}
-                        disabled={day.dateString !== todayString}
-                        aria-label={`${task.title}, ${day.dateString}`}
-                    />
-                ))}
-            </div>
-
-            <div className="dashboard-task-progress">
-                <div className="dashboard-task-progress-track">
-                    <div
-                        className="dashboard-task-progress-fill"
-                        style={{ width: `${percentage}%` }}
-                    />
+        <div className="dashboard-task-weeks-row">
+            {weeks.map((week, weekIndex) => (
+                <div className="dashboard-task-week-row" key={weekIndex}>
+                    {week.map((day) => renderCell(day))}
                 </div>
-                <span className="dashboard-task-progress-value">
-                    {percentage}%
-                </span>
-            </div>
+            ))}
         </div>
     );
+}
+
+interface GroupedTasks {
+    type: TaskType;
+    tasks: DashboardTask[];
 }
 
 export function DashboardTaskBoard({
@@ -179,9 +175,24 @@ export function DashboardTaskBoard({
     month,
 }: DashboardTaskBoardProps) {
     const todayString = toLocalDateString(new Date());
-    const days = buildCalendarDays(year, month);
+    const weeks = buildCalendarWeeks(year, month);
 
-    const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
+    const updateProgress = useUpdateProgress();
+
+    const [selectedCollectionId, setSelectedCollectionId] =
+        useState<string | null>(null);
+
+    const [isAddCollectionOpen, setIsAddCollectionOpen] = useState(false);
+
+    const [isEditCollectionOpen, setIsEditCollectionOpen] = useState(false);
+
+    const [selectedTask, setSelectedTask] =
+        useState<DashboardTask | null>(null);
+
+    const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+
+    const [isArchiveOpen, setIsArchiveOpen] = useState(false);
+
 
     const activeCollection =
         collections.find(
@@ -190,11 +201,11 @@ export function DashboardTaskBoard({
 
     const visibleTasks = activeCollection
         ? tasks.filter((task) =>
-              activeCollection.task_ids.includes(task.task_id),
-          )
+            activeCollection.task_ids.includes(task.task_id),
+        )
         : tasks;
 
-    const groups = GROUP_ORDER.map((type) => ({
+    const groups: GroupedTasks[] = GROUP_ORDER.map((type) => ({
         type,
         tasks: visibleTasks.filter((task) => task.task_type === type),
     })).filter((group) => group.tasks.length > 0);
@@ -231,7 +242,7 @@ export function DashboardTaskBoard({
                             key={collection.collection_id}
                             className={
                                 selectedCollectionId ===
-                                collection.collection_id
+                                    collection.collection_id
                                     ? 'dashboard-task-board-tab active'
                                     : 'dashboard-task-board-tab'
                             }
@@ -249,80 +260,184 @@ export function DashboardTaskBoard({
                         type="button"
                         className="dashboard-task-board-add-collection"
                         aria-label="Add collection"
+                        onClick={() => setIsAddCollectionOpen(true)}
                     >
                         +
                     </button>
                 </div>
             </div>
 
-            <div className="dashboard-task-calendar-header">
-                <span className="dashboard-task-info-spacer" />
-
-                <div
-                    className="dashboard-task-calendar dashboard-task-calendar-labels"
-                    style={{
-                        gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))`,
-                    }}
-                >
-                    {days.map((day) => (
-                        <span
-                            className="dashboard-task-day-label"
-                            key={day.dateString}
-                        >
-                            {day.day}
-                        </span>
-                    ))}
-                </div>
-
-                <span className="dashboard-task-progress-spacer" />
-            </div>
-
-            <div className="dashboard-task-groups">
-                {groups.length === 0 ? (
-                    <p className="dashboard-task-empty">
-                        {activeCollection
-                            ? `No tasks in "${activeCollection.name}" yet.`
-                            : 'No tasks yet.'}
-                    </p>
-                ) : (
-                    groups.map((group) => (
-                        <section
-                            className="dashboard-task-group"
-                            key={group.type}
-                        >
-                            <h4 className="dashboard-task-group-label">
-                                {TYPE_LABELS[group.type]}
-                            </h4>
-
-                            <div className="dashboard-task-group-rows">
+            {groups.length === 0 ? (
+                <p className="dashboard-task-empty">
+                    {activeCollection
+                        ? `No tasks in "${activeCollection.name}" yet.`
+                        : 'No tasks yet.'}
+                </p>
+            ) : (
+                <div className="dashboard-task-board-body">
+                    {/* Column 1: titles. Never scrolls. */}
+                    <div className="dashboard-task-titles-col">
+                        <div className="dashboard-task-header-spacer" />
+                        {groups.map((group) => (
+                            <div className="dashboard-task-group-block" key={group.type}>
+                                <div className="dashboard-task-group-label">
+                                    {TYPE_LABELS[group.type]}
+                                </div>
                                 {group.tasks.map((task) => (
-                                    <TaskRow
-                                        key={task.task_id}
-                                        task={task}
-                                        days={days}
-                                        todayString={todayString}
-                                    />
+                                    <div className="dashboard-task-row" key={task.task_id}>
+                                        <span className="dashboard-task-title">
+                                            {task.title}
+                                        </span>
+
+                                        <button
+                                            type="button"
+                                            className="dashboard-task-action-button"
+                                            aria-label={`Task options for ${task.title}`}
+                                            onClick={() => setSelectedTask(task)}
+                                        >
+                                            ⋮
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
-                        </section>
-                    ))
-                )}
-            </div>
+                        ))}
+                    </div>
+
+                    {/* Column 2: the day-header and every task's cells, inside ONE
+                        overflow-x:auto div — the only thing that scrolls. */}
+                    <div className="dashboard-task-grid-scroll">
+                        <div className="dashboard-task-grid-inner">
+                            <div className="dashboard-task-calendar-header-row">
+                                <WeekGrid
+                                    weeks={weeks}
+                                    renderCell={(day) => (
+                                        <span
+                                            className="dashboard-task-day-label"
+                                            key={day.dateString}
+                                        >
+                                            {day.day}
+                                        </span>
+                                    )}
+                                />
+                            </div>
+
+                            {groups.map((group) => (
+                                <div className="dashboard-task-group-block" key={group.type}>
+                                    <div className="dashboard-task-group-label-spacer" />
+                                    {group.tasks.map((task) => (
+                                        <div className="dashboard-task-row" key={task.task_id}>
+                                            <WeekGrid
+                                                weeks={weeks}
+                                                renderCell={(day) => (
+                                                    <button
+                                                        type="button"
+                                                        key={day.dateString}
+                                                        className={getCellClass(task, day, todayString)}
+                                                        disabled={
+                                                            day.dateString !== todayString ||
+                                                            !isTaskActiveOnDate(task, day.dateString)
+                                                        }
+                                                        onClick={() => {
+                                                            updateProgress.mutate(task.task_id);
+                                                        }}
+                                                        aria-label={`${task.title}, ${day.dateString}`}
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Column 3: progress bars. Never scrolls. */}
+                    <div className="dashboard-task-progress-col">
+                        <div className="dashboard-task-header-spacer" />
+                        {groups.map((group) => (
+                            <div className="dashboard-task-group-block" key={group.type}>
+                                <div className="dashboard-task-group-label-spacer" />
+                                {group.tasks.map((task) => {
+                                    const percentage = getTaskCompletionPercentage(task);
+                                    return (
+                                        <div className="dashboard-task-row" key={task.task_id}>
+                                            <div className="dashboard-task-progress">
+                                                <div className="dashboard-task-progress-track">
+                                                    <div
+                                                        className="dashboard-task-progress-fill"
+                                                        style={{ width: `${percentage}%` }}
+                                                    />
+                                                </div>
+                                                <span className="dashboard-task-progress-value">
+                                                    {percentage}%
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {activeCollection && (
+                <div className="dashboard-task-board-collection-actions">
+                    <button
+                        type="button"
+                        className="dashboard-task-board-button dashboard-task-board-button-edit"
+                        onClick={() => setIsEditCollectionOpen(true)}
+                    >
+                        Edit Collection
+                    </button>
+                </div>
+            )}
 
             <div className="dashboard-task-board-footer">
                 <button
                     type="button"
                     className="dashboard-task-board-button dashboard-task-board-button-add"
+                    onClick={() => setIsAddTaskOpen(true)}
                 >
                     + Add task
                 </button>
                 <button
                     type="button"
                     className="dashboard-task-board-button dashboard-task-board-button-archive"
+                    onClick={() => setIsArchiveOpen(true)}
                 >
                     Archived
                 </button>
             </div>
+            {selectedTask && (
+                <EditTaskModal
+                    task={selectedTask}
+                    onClose={() => setSelectedTask(null)}
+                />
+            )}
+            {isAddTaskOpen && (
+                <AddTaskModal
+                    onClose={() => setIsAddTaskOpen(false)}
+                />
+            )}
+            {isArchiveOpen && (
+                <ArchiveModal
+                    onClose={() => setIsArchiveOpen(false)}
+                />
+            )}
+            {isAddCollectionOpen && (
+                <AddCollectionModal
+                    onClose={() => setIsAddCollectionOpen(false)}
+                />
+            )}
+            {isEditCollectionOpen && activeCollection && (
+                <EditCollectionModal
+                    collectionId={activeCollection.collection_id}
+                    collectionName={activeCollection.name}
+                    onClose={() => setIsEditCollectionOpen(false)}
+                />
+            )}
+
         </section>
     );
 }

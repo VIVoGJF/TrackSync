@@ -1,0 +1,443 @@
+.edit-collection-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: var(--space-5);
+
+    background: rgba(16, 18, 20, 0.72);
+}
+
+.edit-collection-modal {
+    width: min(500px, 100%);
+    max-height: min(720px, calc(100vh - 48px));
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-panel);
+
+    overflow: hidden;
+
+    font-family: var(--font-ui);
+}
+
+/* Header */
+
+.edit-collection-header {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: var(--space-5);
+}
+
+.edit-collection-header h2 {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25;
+
+    overflow-wrap: anywhere;
+}
+
+.edit-collection-header p {
+    margin: var(--space-2) 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.edit-collection-close {
+    flex: 0 0 32px;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: transparent;
+    color: var(--text-secondary);
+
+    font-family: var(--font-ui);
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.edit-collection-close:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.edit-collection-close:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Content */
+
+.edit-collection-content {
+    flex: 1;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 0 var(--space-5) var(--space-5);
+
+    overflow: hidden;
+}
+
+/* Section heading */
+
+.edit-collection-section-heading {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: var(--space-2);
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.edit-collection-section-heading span:last-child {
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+/* Task list */
+
+.edit-collection-task-list {
+    flex: 1;
+    min-height: 120px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-5);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: var(--space-2);
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-card-hover) transparent;
+}
+
+.edit-collection-task-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.edit-collection-task-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.edit-collection-task-list::-webkit-scrollbar-thumb {
+    background: var(--bg-card-hover);
+    border-radius: 999px;
+}
+
+.edit-collection-task-list::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Groups */
+
+.edit-collection-task-group {
+    flex: 0 0 auto;
+}
+
+.edit-collection-task-group h3 {
+    margin: 0 0 var(--space-2);
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.edit-collection-task-group-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+}
+
+/* Existing task */
+
+.edit-collection-task-row {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-3);
+
+    padding: var(--space-3);
+
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-card);
+}
+
+
+/* Task information */
+
+.edit-collection-task-info {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.edit-collection-task-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: var(--text-primary);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.edit-collection-task-type {
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+/* Remove */
+
+.edit-collection-remove-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    gap: 5px;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: transparent;
+    color: var(--danger);
+    opacity: 0.6;
+
+    font-family: var(--font-ui);
+    font-size: 14px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.edit-collection-remove-button:hover {
+    opacity: 1;
+}
+
+.edit-collection-remove-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Add-task selection */
+
+.edit-collection-task-select-row {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-3);
+
+    padding: var(--space-3);
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    font-family: var(--font-ui);
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.edit-collection-task-select-row:hover {
+    background: var(--bg-card-hover);
+}
+
+.edit-collection-task-select-row-selected {
+    background: var(--bg-card-hover);
+}
+
+.edit-collection-task-select-row:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* Checkbox */
+
+.edit-collection-checkbox {
+    flex: 0 0 20px;
+
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-surface);
+    color: var(--text-primary);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.edit-collection-checkbox-selected {
+    background: var(--level-2);
+    color: var(--text-primary);
+}
+
+/* Messages */
+
+.edit-collection-message {
+    padding: var(--space-7) var(--space-4);
+
+    text-align: center;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+.edit-collection-error {
+    margin: var(--space-3) 0 0;
+
+    color: var(--danger);
+
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Actions */
+
+.edit-collection-actions {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: var(--space-3);
+
+    padding: 0 var(--space-5) var(--space-5);
+}
+
+.edit-collection-secondary,
+.edit-collection-primary,
+.edit-collection-delete {
+    min-height: 44px;
+
+    padding: 0 var(--space-4);
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+/* Primary */
+
+.edit-collection-primary {
+    background: #11632a46;
+    color: #2db55d;
+}
+
+.edit-collection-primary:hover {
+    background: #2b9343c3;
+    color: var(--text-primary)
+}
+
+.edit-collection-primary:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Secondary */
+
+.edit-collection-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.edit-collection-secondary:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.edit-collection-secondary:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Delete collection */
+
+.edit-collection-delete {
+    background: var(--danger-dim);
+    color: var(--danger);
+}
+
+.edit-collection-delete:hover {
+    background: var(--danger);
+    color: var(--text-primary);
+}
+
+.edit-collection-delete:disabled {
+    opacity: 0.5;
+    cursor: default;
+}

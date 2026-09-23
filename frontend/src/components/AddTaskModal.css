@@ -1,0 +1,236 @@
+.add-task-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: var(--space-5);
+
+    background: rgba(16, 18, 20, 0.72);
+}
+
+.add-task-modal {
+    width: min(440px, 100%);
+
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+
+    box-shadow: var(--shadow-panel);
+
+    overflow: hidden;
+
+    font-family: var(--font-ui);
+}
+
+/* Header */
+
+.add-task-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: var(--space-4) var(--space-5);
+}
+
+.add-task-modal-header h2 {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.add-task-modal-header p {
+    margin: var(--space-1) 0 0;
+
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.add-task-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    padding: 0;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: transparent;
+    color: var(--text-muted);
+
+    font-family: inherit;
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.add-task-close:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+/* Form */
+
+.add-task-form {
+    padding: 0 var(--space-5) var(--space-5);
+}
+
+.add-task-field {
+    margin-bottom: var(--space-4);
+}
+
+.add-task-field label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    margin-bottom: var(--space-2);
+
+    font-size: 11px;
+    font-weight: 500;
+
+    color: var(--text-secondary);
+}
+
+.add-task-field label span {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+/* Inputs */
+
+.add-task-field input,
+.add-task-field textarea,
+.add-task-field select {
+    width: 100%;
+    box-sizing: border-box;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    font-family: var(--font-ui);
+    font-size: 12px;
+
+    outline: none;
+
+    transition: background 0.15s ease;
+}
+
+.add-task-field input,
+.add-task-field select {
+    height: 36px;
+    padding: 0 var(--space-3);
+}
+
+.add-task-field textarea {
+    min-height: 72px;
+    padding: var(--space-2) var(--space-3);
+
+    resize: vertical;
+}
+
+.add-task-field input::placeholder,
+.add-task-field textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.add-task-field input:focus,
+.add-task-field textarea:focus,
+.add-task-field select:focus {
+    background: var(--bg-card-hover);
+}
+
+/* Select */
+
+.add-task-field select {
+    cursor: pointer;
+}
+
+.add-task-field select option {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+/* Date */
+
+.add-task-field input[type='date'] {
+    color-scheme: dark;
+}
+
+/* Error */
+
+.add-task-error {
+    margin: calc(-1 * var(--space-1)) 0 var(--space-3);
+
+    font-size: 11px;
+    color: var(--danger);
+}
+
+/* Actions */
+
+.add-task-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+}
+
+/* Buttons */
+
+.add-task-cancel,
+.add-task-submit {
+    height: 34px;
+
+    padding: 0 var(--space-3);
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.add-task-cancel {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.add-task-cancel:hover:not(:disabled) {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.add-task-submit {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.add-task-submit:hover:not(:disabled) {
+    background: #383a3d;
+}
+
+/* Disabled */
+
+.add-task-cancel:disabled,
+.add-task-submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
