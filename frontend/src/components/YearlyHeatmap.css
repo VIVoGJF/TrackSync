@@ -8,6 +8,9 @@
     /* Normal padding on all sides. Safe here because this element itself
        never scrolls - only its .heatmap-scroll child does. */
     padding: var(--space-4) 15px;
+
+    /* Lets .heatmap-stats respond to the card's own width. */
+    container-type: inline-size;
 }
 
 .heatmap-stats {
@@ -25,6 +28,15 @@
 
 .heatmap-stats strong {
     color: var(--text-primary);
+}
+
+/* Narrow card: stack the stats instead of squeezing them onto one line. */
+@container (max-width: 420px) {
+    .heatmap-stats {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-1);
+    }
 }
 
 /* The only element that scrolls. Sits inside .yearly-heatmap's padding, so

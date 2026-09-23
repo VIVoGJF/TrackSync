@@ -51,7 +51,7 @@
     align-items: center;
     justify-content: space-between;
     background: var(--bg-surface);
-    border: px solid var(--border-subtle);
+    border: 0;
     border-radius: var(--radius-sm);
     padding: 12px 14px;
     font-size: 14px;
@@ -79,4 +79,86 @@
     padding: 3px 6px;
     border-radius: 4px;
     color: var(--text-muted);
+}
+
+/* Log out lives in the sheet on phones only; on desktop it stays at the
+   bottom of the page. */
+.profile-logout-button,
+.profile-overlay {
+    display: none;
+}
+
+/* ---- Phones: the panel becomes a slide-in sheet under the top bar ---- */
+@media (max-width: 768px) {
+    .profile-panel {
+        position: fixed;
+        top: var(--topbar-height);
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+
+        width: min(300px, 85vw);
+        padding: var(--space-4);
+        overflow-y: auto;
+        background: var(--bg-surface);
+        box-shadow: var(--shadow-panel);
+
+        /* Closed: off-screen AND visibility:hidden, so it can't be tabbed to. */
+        transform: translateX(100%);
+        visibility: hidden;
+        transition: transform 0.2s ease, visibility 0s linear 0.2s;
+    }
+
+    .profile-panel-open {
+        transform: none;
+        visibility: visible;
+        transition: transform 0.2s ease, visibility 0s;
+    }
+
+    .profile-avatar {
+        width: 72px;
+        height: 72px;
+        align-self: center;
+    }
+
+    .profile-name {
+        font-size: 16px;
+    }
+
+    .profile-nav {
+        padding: 0;
+        margin-top: var(--space-2);
+        background: none;
+    }
+
+    .profile-logout-button {
+        display: block;
+        margin-top: auto;
+        padding: 10px;
+        border: 0;
+        border-radius: var(--radius-sm);
+        background: var(--danger-dim);
+        color: var(--danger);
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* Dim backdrop behind the sheet; tapping it closes the menu. */
+    .profile-overlay {
+        display: block;
+        position: fixed;
+        inset: var(--topbar-height) 0 0 0;
+        z-index: 30;
+        border: 0;
+        padding: 0;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+
+    .profile-overlay-visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }

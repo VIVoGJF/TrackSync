@@ -3,13 +3,20 @@ import './ProfilePanel.css';
 
 interface ProfilePanelProps {
     username: string;
+    /** Phones only: whether the slide-in sheet is showing. Ignored on desktop. */
+    isOpen?: boolean;
+    /** Phones only: shows a Log out button inside the sheet. */
+    onLogout?: () => void;
 }
 
-export function ProfilePanel({ username }: ProfilePanelProps) {
+export function ProfilePanel({ username, isOpen = false, onLogout }: ProfilePanelProps) {
     const navigate = useNavigate();
 
     return (
-        <aside className="profile-panel">
+        <aside
+            id="profile-menu"
+            className={`profile-panel${isOpen ? ' profile-panel-open' : ''}`}
+        >
             <div className="profile-avatar" aria-hidden="true" />
             <p className="profile-name">{username}</p>
             <button className="edit-profile-button" type="button">
@@ -29,6 +36,12 @@ export function ProfilePanel({ username }: ProfilePanelProps) {
                     <span className="nav-badge">Upcoming</span>
                 </button>
             </nav>
+
+            {onLogout && (
+                <button className="profile-logout-button" type="button" onClick={onLogout}>
+                    Log out
+                </button>
+            )}
         </aside>
     );
 }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import { getDashboard } from '../api/dashboard';
@@ -16,6 +17,29 @@ import './HomePage.css';
 
 export function HomePage() {
   const { user, logout } = useAuth();
+
+  // Phones: the profile panel is a slide-in sheet opened from the top bar.
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    // If the window grows back to desktop size, the panel is inline again.
+    const desktop = window.matchMedia('(min-width: 769px)');
+    const onChange = (e: MediaQueryListEvent) => {
+      if (e.matches) setMenuOpen(false);
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    desktop.addEventListener('change', onChange);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      desktop.removeEventListener('change', onChange);
+    };
+  }, [menuOpen]);
 
   const today = new Date();
   const year = today.getFullYear();
@@ -64,10 +88,26 @@ export function HomePage() {
 
   return (
     <div className="home-page">
-      <TopBar username={user?.username ?? ''} />
+      <TopBar
+        username={user?.username ?? ''}
+        onMenuClick={() => setMenuOpen((open) => !open)}
+        menuOpen={menuOpen}
+      />
+
+      <button
+        type="button"
+        className={`profile-overlay${menuOpen ? ' profile-overlay-visible' : ''}`}
+        aria-label="Close menu"
+        tabIndex={-1}
+        onClick={() => setMenuOpen(false)}
+      />
 
       <div className="home-content">
-        <ProfilePanel username={user?.username ?? ''} />
+        <ProfilePanel
+          username={user?.username ?? ''}
+          isOpen={menuOpen}
+          onLogout={logout}
+        />
 
         <div className="home-main">
           <div className="home-top-row">
@@ -80,7 +120,7 @@ export function HomePage() {
           <YearlyHeatmap months={heatmapMonths} stats={heatmapStats} />
 
           <TaskBoard items={todaysTasks} collections={dashboard.collections} />
-          <div style={{ padding: 32 }}>
+          <div className="home-logout" style={{ padding: 32 }}>
             <button className="primary-button" onClick={logout} style={{ width: 'auto', padding: '8px 16px' }}>
               Log out
             </button>
