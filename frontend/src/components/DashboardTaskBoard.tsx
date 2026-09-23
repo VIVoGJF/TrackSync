@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { DashboardTask, DashboardCollection } from '../api/dashboard';
 import { getDayIndex, getWeekIndex, toLocalDateString } from '../lib/dateIndex';
 import { useUpdateProgress } from '../hooks/useUpdateProgress';
@@ -210,6 +210,24 @@ export function DashboardTaskBoard({
         tasks: visibleTasks.filter((task) => task.task_type === type),
     })).filter((group) => group.tasks.length > 0);
 
+    const gridScrollRef = useRef<HTMLDivElement>(null);
+    const hasTasks = groups.length > 0;
+
+    useLayoutEffect(() => {
+        const container = gridScrollRef.current;
+        if (!container) return;
+
+        const target = container.querySelector<HTMLElement>('[data-today]');
+        if (!target) {
+            container.scrollLeft = 0; // past or future month: start at day 1
+            return;
+        }
+
+        const c = container.getBoundingClientRect();
+        const t = target.getBoundingClientRect();
+        container.scrollLeft += (t.left - c.left) - (c.width / 2 - t.width / 2);
+    }, [year, month, selectedCollectionId, hasTasks]);
+
     return (
         <section className="dashboard-task-board">
             <div className="dashboard-task-board-header">
@@ -255,16 +273,15 @@ export function DashboardTaskBoard({
                             {collection.name}
                         </button>
                     ))}
-
-                    <button
-                        type="button"
-                        className="dashboard-task-board-add-collection"
-                        aria-label="Add collection"
-                        onClick={() => setIsAddCollectionOpen(true)}
-                    >
-                        +
-                    </button>
                 </div>
+                <button
+                    type="button"
+                    className="dashboard-task-board-add-collection"
+                    aria-label="Add collection"
+                    onClick={() => setIsAddCollectionOpen(true)}
+                >
+                    +
+                </button>
             </div>
 
             {groups.length === 0 ? (
@@ -305,7 +322,7 @@ export function DashboardTaskBoard({
 
                     {/* Column 2: the day-header and every task's cells, inside ONE
                         overflow-x:auto div — the only thing that scrolls. */}
-                    <div className="dashboard-task-grid-scroll">
+                    <div className="dashboard-task-grid-scroll" ref={gridScrollRef}>
                         <div className="dashboard-task-grid-inner">
                             <div className="dashboard-task-calendar-header-row">
                                 <WeekGrid
@@ -314,6 +331,7 @@ export function DashboardTaskBoard({
                                         <span
                                             className="dashboard-task-day-label"
                                             key={day.dateString}
+                                            data-today={day.dateString === todayString ? '' : undefined}
                                         >
                                             {day.day}
                                         </span>

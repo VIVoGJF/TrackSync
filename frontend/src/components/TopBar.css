@@ -1,5 +1,9 @@
 :root {
     --page-max-width: 1200px;
+    /* 12px padding x2 + 32px logo. The mobile profile menu is positioned
+       against this, so keep it in sync with .top-bar-content.
+       (Phones override it in the media query at the bottom of this file.) */
+    --topbar-height: 56px;
 }
 
 
@@ -17,6 +21,7 @@
     max-width: var(--page-max-width);
     margin: 0 auto;
     box-sizing: border-box;
+    min-height: var(--topbar-height);
 }
 
 .top-bar-logo{
@@ -24,6 +29,8 @@
     flex-direction: row;
     align-items: center;
     gap: var(--space-2);
+    text-decoration: none;
+    color: inherit;
 }
 
 .top-logo {
@@ -76,4 +83,57 @@
 .top-bar-username {
     font-size: 14px;
     font-weight: 500;
+}
+
+/* Hamburger: phones only. */
+.top-bar-menu-button {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: -8px; /* optical alignment with the page edge */
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--text-primary);
+}
+
+.top-bar-menu-button:hover {
+    background: var(--bg-card);
+}
+
+@media (max-width: 768px) {
+    :root {
+        --topbar-height: 48px;
+    }
+
+    .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    .top-bar-content {
+        padding: var(--space-2) var(--space-4);
+    }
+
+    .top-logo {
+        height: 26px;
+    }
+
+    .top-TrackSync {
+        margin-top: 2px;
+        font-size: 17px;
+    }
+
+    /* The menu button replaces avatar + name (the sheet shows them instead). */
+    .top-bar-user-has-menu {
+        display: none;
+    }
+
+    .top-bar-menu-button {
+        display: inline-flex;
+    }
 }
