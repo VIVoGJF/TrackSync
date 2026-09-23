@@ -10,6 +10,7 @@ from app.api.auth_routes import get_current_user
 from app.db.database import get_db
 from app.db.models import DeadlineTaskCompletion, RecurringTaskProgress, Task, TaskActivePeriod, TaskType, User, WeeklyTaskCompletion, DailyActivity, TaskCollection, CollectionTaskLink
 from app.schemas.dashboard_schemas import YearlyActivityResponse, ActivePeriodResponse, ActivityResponse, DashboardResponse, DailyTaskResponse, DeadlineResponse, DeadlineTaskResponse, WeeklyCompletionResponse, WeeklyTaskResponse, DashboardCollectionResponse
+from app.core.timezones import get_user_today
 
 from app.services.progress_service import initialize_status_string
 
@@ -260,7 +261,7 @@ async def get_dashboard(year: int, month: int, db: AsyncSession = Depends(get_db
 
 @router.get("/activity", response_model=YearlyActivityResponse)
 async def get_activity(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
-    end = date.today()
+    end = get_user_today(current_user)
     start = end - timedelta(days=364)
 
     result = await db.execute(
