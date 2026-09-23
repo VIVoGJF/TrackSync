@@ -12,7 +12,9 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["http://localhost:5173",],
+    allow_origins = [
+        "http://localhost:5173",
+        "https://tracksyncv1.vercel.app",],
     allow_credentials= True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,3 +30,7 @@ app.include_router(dashboard_router)
 @app.get("/")
 def root():
     return {"message": "TrackSync API"}
+
+@app.api_route("/health", methods=["GET", "HEAD"])
+def health_check():
+    return {"status": "ok"}
