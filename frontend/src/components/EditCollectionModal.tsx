@@ -368,9 +368,6 @@ export function EditCollectionModal({
                                                         disabled={isPending}
                                                         aria-label={`Remove ${task.title}`}
                                                     >
-                                                        <span aria-hidden="true">
-                                                            🗑
-                                                        </span>
                                                         Remove
                                                     </button>
                                                 </div>
