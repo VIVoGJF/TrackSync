@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import logo from '../../public/favlogo.png';
+import logoText from '../assets/logo-text.png';
 import './TopBar.css';
 
 interface TopBarProps {
@@ -15,7 +16,7 @@ export function TopBar({ username, onMenuClick, menuOpen = false }: TopBarProps)
             <div className="top-bar-content">
                 <Link to="/profile" className="top-bar-logo" aria-label="TrackSync home">
                     <img src={logo} className="top-logo" alt="" />
-                    <span className="top-TrackSync">TrackSync</span>
+                    <img src={logoText} className="top-logo-text" alt="" />
                 </Link>
                 <div className="top-bar-right">
                     {/* Wired up once Groups/Projects exist and there's something to search */}
