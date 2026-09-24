@@ -84,6 +84,7 @@ export function DashboardPage() {
                 username={user?.username ?? ''}
                 onMenuClick={() => setMenuOpen((open) => !open)}
                 menuOpen={menuOpen}
+                onLogout={logout}
             />
 
             <button

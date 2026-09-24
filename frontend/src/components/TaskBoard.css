@@ -6,14 +6,38 @@
 
 .taskboard-heading {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: var(--space-2);
-    margin: 0 0 var(--space-4);
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+    margin: 0 0 calc(var(--space-4) - 6px);
+}
+
+.taskboard-heading::-webkit-scrollbar {
+    height: 6px;
+}
+.taskboard-heading::-webkit-scrollbar-track {
+    background: var(--level-0);
+    border-radius: 3px;
+}
+.taskboard-heading::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 3px;
+}
+@supports not selector(::-webkit-scrollbar) {
+    .taskboard-heading {
+        scrollbar-width: thin;
+        scrollbar-color: var(--text-muted) var(--level-0);
+    }
 }
 
 .taskboard-tab {
     display: inline-flex;
+    flex-shrink: 0;
+    white-space: nowrap;
     align-items: center;
     gap: 10px;
     padding: 8px 14px;
@@ -33,7 +57,7 @@
 
 .taskboard-tab:focus-visible {
     outline: 2px solid var(--level-2);
-    outline-offset: 2px;
+    outline-offset: -2px;
 }
 
 .taskboard-tab-active {
@@ -84,21 +108,42 @@
 
 .taskboard-title {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 6px;
+    row-gap: 2px;
     font-size: 14px;
+}
+
+.taskboard-title-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.taskboard-done-tick {
+    margin-left: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--level-2);
 }
 
 .taskboard-deadline {
-    margin-left: 6px;
     font-size: 14px;
     color: var(--text-muted);
+    white-space: nowrap; /* moves as one piece, never split like "(12" / "Sep)" */
 }
 
-/* Same minimum height in both states, so the row doesn't jump when toggled. */
-
 .mark-done-button,
-.taskboard-actions {
+.undo-button {
     box-sizing: border-box;
+    min-width: 96px;
     min-height: 30px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .mark-done-button {
@@ -109,7 +154,6 @@
     padding: 6px 14px;
     font-size: 13px;
     font-weight: 600;
-    flex-shrink: 0;
 }
 
 .mark-done-button:hover:not(:disabled) {
@@ -121,30 +165,11 @@
     cursor: not-allowed;
 }
 
-/* Done state: "✓ Done" label with a quiet Undo next to it. */
-
-.taskboard-actions {
-    display: flex;
-    margin-right: 5px;
-    align-items: center;
-    gap: var(--space-3);
-    flex-shrink: 0;
-}
-
-.taskboard-done-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--level-2);
-}
-
 .undo-button {
     background: none;
     border: none;
-    padding: 0;
-    font-size: 12px;
+    padding: 6px 14px;
+    font-size: 14px;          /* was 12px */
     color: var(--danger);
     opacity: 0.6;
     text-decoration: underline;

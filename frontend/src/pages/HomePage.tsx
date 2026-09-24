@@ -92,6 +92,7 @@ export function HomePage() {
         username={user?.username ?? ''}
         onMenuClick={() => setMenuOpen((open) => !open)}
         menuOpen={menuOpen}
+        onLogout={logout}
       />
 
       <button
@@ -120,11 +121,6 @@ export function HomePage() {
           <YearlyHeatmap months={heatmapMonths} stats={heatmapStats} />
 
           <TaskBoard items={todaysTasks} collections={dashboard.collections} />
-          <div className="home-logout" style={{ padding: 32 }}>
-            <button className="primary-button" onClick={logout} style={{ width: 'auto', padding: '8px 16px' }}>
-              Log out
-            </button>
-          </div>
         </div>
       </div>
     </div>
