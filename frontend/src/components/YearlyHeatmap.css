@@ -110,52 +110,25 @@
     color: var(--text-secondary);
 }
 
-/* ---- Scrollbar (Chrome, Edge, Safari, Android) ---- */
 .heatmap-scroll::-webkit-scrollbar {
-    height: 10px;
+    height: 6px;
 }
-
 .heatmap-scroll::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-    border-radius: 5px;
+    background: var(--level-0);
+    border-radius: 3px;
 }
-
 .heatmap-scroll::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 5px;
+    background: var(--text-muted);
+    border-radius: 3px;
 }
-
 .heatmap-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
+    background: var(--text-secondary);
 }
 
-/* Arrow buttons at both ends. The arrow colour is baked into the SVG
-   (%23888 is #888888), so change it there if you change the thumb colour. */
-.heatmap-scroll::-webkit-scrollbar-button:single-button {
-    display: block;
-    width: 14px;
-    height: 10px;
-    background-color: var(--scrollbar-track);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 8px 8px;
-}
-
-.heatmap-scroll::-webkit-scrollbar-button:horizontal:decrement {
-    border-radius: 5px 0 0 5px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M6 1L2 4l4 3z' fill='%23888'/%3E%3C/svg%3E");
-}
-
-.heatmap-scroll::-webkit-scrollbar-button:horizontal:increment {
-    border-radius: 0 5px 5px 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M2 1l4 3-4 3z' fill='%23888'/%3E%3C/svg%3E");
-}
-
-/* Firefox doesn't support the ::-webkit-scrollbar rules above (and has no
-   arrow buttons), so give it the thin standard scrollbar in the same colours. */
+/* Firefox: thin standard scrollbar in the same colours. */
 @supports not selector(::-webkit-scrollbar) {
     .heatmap-scroll {
         scrollbar-width: thin;
-        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        scrollbar-color: var(--text-muted) var(--level-0);
     }
 }
