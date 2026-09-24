@@ -63,9 +63,11 @@
     background: var(--bg-card);
     color: var(--text-primary);
 }
+
 .nav-item-active:hover {
     background: var(--bg-card-hover);
 }
+
 .nav-item-disabled {
     color: var(--text-muted);
     cursor: not-allowed;
@@ -81,9 +83,8 @@
     color: var(--text-muted);
 }
 
-/* Log out lives in the sheet on phones only; on desktop it stays at the
-   bottom of the page. */
-.profile-logout-button,
+
+.profile-panel-footer,
 .profile-overlay {
     display: none;
 }
@@ -131,16 +132,27 @@
         background: none;
     }
 
-    .profile-logout-button {
-        display: block;
+    .profile-panel-footer {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
         margin-top: auto;
-        padding: 10px;
+    }
+
+    .profile-panel-divider {
+        height: 1px;
+        background: var(--border-subtle);
+    }
+
+    .profile-logout-button {
+        background: none;
         border: 0;
         border-radius: var(--radius-sm);
-        background: var(--danger-dim);
-        color: var(--danger);
+        padding: 6px 14px;
         font-size: 14px;
         font-weight: 500;
+        text-align: left;
+        color: var(--text-secondary);
     }
 
     /* Dim backdrop behind the sheet; tapping it closes the menu. */

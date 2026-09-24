@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { ThemeToggle } from './ThemeToggle';
 import './ProfilePanel.css';
 
 interface ProfilePanelProps {
@@ -51,9 +52,13 @@ export function ProfilePanel({
             </nav>
 
             {onLogout && (
-                <button className="profile-logout-button" type="button" onClick={onLogout}>
-                    Log out
-                </button>
+                <div className="profile-panel-footer">
+                    <div className="profile-panel-divider" />
+                    <ThemeToggle />
+                    <button className="profile-logout-button" type="button" onClick={onLogout}>
+                        Log out
+                    </button>
+                </div>
             )}
         </aside>
     );

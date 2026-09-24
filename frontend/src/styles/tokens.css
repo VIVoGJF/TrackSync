@@ -1,37 +1,4 @@
 :root {
-    /* Surfaces */
-    --bg-page: #101214;
-    --bg-surface: #191b1e;
-    /* header bar, nested panels */
-    --bg-card: #28292b;
-    /* cards, empty grid/heatmap cell */
-    --bg-card-hover: #303234;
-    --border-subtle: #34363a;
-
-    /* Text */
-    --text-primary: #e6e6e6;
-    --text-secondary: #9a9ea3;
-    --text-muted: #6b6f73;
-
-    /* Brand */
-    --calendar-body-dark: #1d2f33;
-
-    /* Contribution / progress scale (shared by heatmap + task grid) */
-    --level-0: var(--bg-card);
-    --level-1: #116329;
-    --level-2: #2B9343;
-    --level-3: #62D17D;
-    --level-4: #ACEEBB;
-
-    /* Task-type accent colors (for gauge segments / breakdown) */
-    --type-daily: #62d17d;
-    --type-weekly: #5b8def;
-    --type-deadline: #e8a33d;
-
-    /* Status */
-    --danger: #e5534b;
-    --danger-dim: #4a2b29;
-
     /* Type scale */
     --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
 
@@ -49,6 +16,71 @@
     --radius-md: 10px;
     --radius-lg: 16px;
 
+    /* Brand (fixed, doesn't change with theme) */
+    --calendar-body-dark: #1d2f33;
+
+    /* Contribution / progress scale (shared by heatmap + task grid).
+       Kept the same across themes, level-0 tracks the surface color. */
+    --level-1: #116329;
+    --level-2: #2B9343;
+    --level-3: #62D17D;
+    --level-4: #ACEEBB;
+
+    /* Task-type accent colors (for gauge segments / breakdown) */
+    --type-daily: #62d17d;
+    --type-weekly: #5b8def;
+    --type-deadline: #e8a33d;
+}
+
+/* ---- Dark theme (default) ---- */
+:root,
+[data-theme='dark'] {
+    /* Surfaces */
+    --bg-page: #101214;
+    --bg-surface: #191b1e;
+    /* header bar, nested panels */
+    --bg-card: #28292b;
+    /* cards, empty grid/heatmap cell */
+    --bg-card-hover: #303234;
+    --border-subtle: #34363a;
+
+    /* Text */
+    --text-primary: #e6e6e6;
+    --text-secondary: #9a9ea3;
+    --text-muted: #6b6f73;
+    --text-logo: #E2E2E2;
+
+    /* Status */
+    --danger: #e5534b;
+    --danger-dim: #4a2b29;
+
     /* Shadow */
     --shadow-panel: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+    --level-0: var(--bg-card);
+}
+
+/* ---- Light theme ---- */
+[data-theme='light'] {
+    /* Surfaces */
+    --bg-page: #edf2f0;
+    --bg-surface: #f6f9f8;
+    --bg-card: #e2e9e6;
+    --bg-card-hover: #d8e1dd;
+    --border-subtle: #ccd7d3;
+
+    /* Text */
+    --text-primary: #202827;
+    --text-secondary: #5d6865;
+    --text-muted: #899390;
+    --text-logo: #1D2F33;
+
+    /* Status */
+    --danger: #c7473f;
+    --danger-dim: #f3dfdc;
+
+    /* Shadow */
+    --shadow-panel: 0 8px 30px rgba(35, 50, 46, 0.09);
+
+    --level-0: var(--bg-card);
 }
