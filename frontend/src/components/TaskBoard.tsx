@@ -109,24 +109,28 @@ export function TaskBoard({ items, collections }: TaskBoardProps) {
                                 return (
                                     <li className="taskboard-row" key={item.taskId}>
                                         <span className="taskboard-title">
-                                            {item.title}
+                                            <span className="taskboard-title-text">
+                                                {item.title}
+                                                {item.isDone && (
+                                                    <span className="taskboard-done-tick" role="img" aria-label="Done">
+                                                        ✓
+                                                    </span>
+                                                )}
+                                            </span>
                                             {item.deadlineDate && (
                                                 <span className="taskboard-deadline">({formatShortDate(item.deadlineDate)})</span>
                                             )}
                                         </span>
 
                                         {item.isDone ? (
-                                            <div className="taskboard-actions">
-                                                <span className="taskboard-done-label">✓ Done</span>
-                                                <button
-                                                    type="button"
-                                                    className="undo-button"
-                                                    disabled={isPendingThisTask}
-                                                    onClick={() => toggleMutation.mutate(item.taskId)}
-                                                >
-                                                    Undo
-                                                </button>
-                                            </div>
+                                            <button
+                                                type="button"
+                                                className="undo-button"
+                                                disabled={isPendingThisTask}
+                                                onClick={() => toggleMutation.mutate(item.taskId)}
+                                            >
+                                                Undo
+                                            </button>
                                         ) : (
                                             <button
                                                 type="button"

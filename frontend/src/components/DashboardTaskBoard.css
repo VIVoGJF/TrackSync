@@ -19,16 +19,15 @@
 
 .dashboard-task-board-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-2);
     min-width: 0;
-    margin-bottom: var(--space-4);
+    margin-bottom: calc(var(--space-4) - 6px);
 }
 
 /* One row that scrolls sideways on its own when there are more collections
-   than fit. Only this strip scrolls, never the whole board. The padding gives
-   the focus outlines room (overflow would clip them); the negative margin
-   cancels it so the tabs stay aligned with the rest of the card. */
+   than fit. Only this strip scrolls, never the whole board. No side padding,
+   so its edges line up exactly with the card content. */
 .dashboard-task-board-tabs {
     display: flex;
     flex-wrap: nowrap;
@@ -38,12 +37,8 @@
     min-width: 0;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 4px;
-    margin: -4px;
-}
-
-.dashboard-task-board-tab {
-    flex-shrink: 0;
+    padding: 0 0 6px;   /* room between the tabs and the scrollbar */
+    margin: 0;
 }
 
 .dashboard-task-board-tabs::-webkit-scrollbar {
@@ -70,6 +65,7 @@
 .dashboard-task-board-tab {
     display: inline-flex;
     align-items: center;
+    flex-shrink: 0;
     padding: 8px 14px;
     border: none;
     border-radius: var(--radius-sm);
@@ -88,14 +84,13 @@
 
 .dashboard-task-board-tab:focus-visible {
     outline: 2px solid var(--level-2);
-    outline-offset: 2px;
+    outline-offset: -2px;
 }
 
 .dashboard-task-board-tab.active {
     background: var(--bg-card);
     color: var(--text-primary);
 }
-
 .dashboard-task-board-add-collection {
     width: 26px;
     height: 26px;
@@ -104,6 +99,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    margin-top: 3px;
+    margin-left: var(--space-3);
 
     border: none;
     border-radius: 50%;
@@ -169,15 +166,15 @@
 }
 
 .dashboard-task-grid-scroll::-webkit-scrollbar {
-    height: 8px;
+    height: 6px;
 }
 .dashboard-task-grid-scroll::-webkit-scrollbar-track {
     background: var(--level-0);
-    border-radius: 4px;
+    border-radius: 3px;
 }
 .dashboard-task-grid-scroll::-webkit-scrollbar-thumb {
     background: var(--text-muted);
-    border-radius: 4px;
+    border-radius: 3px;
 }
 .dashboard-task-grid-scroll::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
