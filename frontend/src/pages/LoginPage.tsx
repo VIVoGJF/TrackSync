@@ -1,12 +1,15 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import logoWordmark from '../assets/logo-wordmark-dark.png';
+import { useThemedAsset } from '../context/ThemeContext';
+import logoWordmarkDark from '../assets/logo-wordmark-dark.png';
+import logoWordmarkLight from '../assets/logo-wordmark-light.png';
 import './LoginPage.css';
 
 export function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const logoWordmark = useThemedAsset(logoWordmarkDark, logoWordmarkLight);
 
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');

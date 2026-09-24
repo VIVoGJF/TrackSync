@@ -1,0 +1,49 @@
+.account-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 60;
+
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3);
+
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-panel);
+}
+
+.account-menu-edit-profile,
+.account-menu-logout {
+    background: none;
+    border: 0;
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    color: var(--text-secondary);
+}
+
+.account-menu-edit-profile:hover,
+.account-menu-logout:hover {
+    color: var(--text-primary);
+    background: var(--bg-card);
+}
+
+.account-menu-divider {
+    height: 1px;
+    margin: var(--space-1) 0;
+    background: var(--border-subtle);
+}
+
+/* This menu is desktop-only; the mobile sheet (ProfilePanel) has its own
+   appearance toggle + logout at the bottom. */
+@media (max-width: 768px) {
+    .account-menu {
+        display: none;
+    }
+}

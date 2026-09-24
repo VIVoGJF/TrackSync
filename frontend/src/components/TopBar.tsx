@@ -1,6 +1,11 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../public/favlogo.png';
-import logoText from '../assets/logo-text.png';
+import logoDark from '../../public/favlogo.png';
+import logoLight from '../../public/favlogo-light.png';
+import logoTextDark from '../assets/logo-text.png';
+import logoTextLight from '../assets/logo-text-light.png';
+import { AccountMenu } from './AccountMenu';
+import { useThemedAsset } from '../context/ThemeContext';
 import './TopBar.css';
 
 interface TopBarProps {
@@ -8,9 +13,36 @@ interface TopBarProps {
     /** When provided, phones get a hamburger button that calls this (opens the profile menu). */
     onMenuClick?: () => void;
     menuOpen?: boolean;
+    /** Desktop: shown in the account dropdown opened from the avatar + name. */
+    onLogout?: () => void;
 }
 
-export function TopBar({ username, onMenuClick, menuOpen = false }: TopBarProps) {
+export function TopBar({ username, onMenuClick, menuOpen = false, onLogout }: TopBarProps) {
+    const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+    const accountRef = useRef<HTMLDivElement>(null);
+    const logo = useThemedAsset(logoDark, logoLight);
+    const logoText = useThemedAsset(logoTextDark, logoTextLight);
+
+    useEffect(() => {
+        if (!accountMenuOpen) return;
+
+        const onPointerDown = (e: MouseEvent) => {
+            if (accountRef.current && !accountRef.current.contains(e.target as Node)) {
+                setAccountMenuOpen(false);
+            }
+        };
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setAccountMenuOpen(false);
+        };
+
+        document.addEventListener('mousedown', onPointerDown);
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('mousedown', onPointerDown);
+            document.removeEventListener('keydown', onKeyDown);
+        };
+    }, [accountMenuOpen]);
+
     return (
         <header className="top-bar">
             <div className="top-bar-content">
@@ -23,9 +55,22 @@ export function TopBar({ username, onMenuClick, menuOpen = false }: TopBarProps)
                     {/* <input className="top-bar-search" type="text" placeholder="Search" disabled /> */}
 
                     {/* Avatar + name. Hidden on phones when a menu button takes over. */}
-                    <div className={`top-bar-user${onMenuClick ? ' top-bar-user-has-menu' : ''}`}>
-                        <div className="top-bar-avatar" aria-hidden="true" />
-                        <span className="top-bar-username">{username}</span>
+                    <div
+                        className={`top-bar-user${onMenuClick ? ' top-bar-user-has-menu' : ''}`}
+                        ref={accountRef}
+                    >
+                        <button
+                            type="button"
+                            className="top-bar-user-button"
+                            onClick={() => setAccountMenuOpen((open) => !open)}
+                            aria-haspopup="menu"
+                            aria-expanded={accountMenuOpen}
+                        >
+                            <div className="top-bar-avatar" aria-hidden="true" />
+                            <span className="top-bar-username">{username}</span>
+                        </button>
+
+                        {accountMenuOpen && <AccountMenu onLogout={onLogout} />}
                     </div>
 
                     {onMenuClick && (
