@@ -247,7 +247,7 @@ export function DashboardTaskBoard({
                         }
                         onClick={() => setSelectedCollectionId(null)}
                     >
-                        Today's tasks
+                        All tasks
                     </button>
 
                     {collections.map((collection) => (

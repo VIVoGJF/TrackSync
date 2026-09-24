@@ -227,7 +227,6 @@ export function EditTaskModal({
                         disabled={isPending}
                         aria-label="Delete task"
                     >
-                        <span aria-hidden="true">🗑</span>
                         <span>
                             {deleteMutation.isPending
                                 ? 'Deleting...'

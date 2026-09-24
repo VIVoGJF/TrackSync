@@ -11,7 +11,7 @@
     background: var(--bg-surface);
 }
 
-.top-bar-content{
+.top-bar-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -24,7 +24,7 @@
     min-height: var(--topbar-height);
 }
 
-.top-bar-logo{
+.top-bar-logo {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -38,11 +38,11 @@
     width: auto;
 }
 
-.top-TrackSync{
-    margin-top: 3px;
-    font-family: "Bauhaus 93", "Blippo", "Arial Black", sans-serif;
-    font-size: 20px;
-    color: #E2E2E2;
+.top-logo-text {
+    height: 22px;
+    width: auto;
+    position: relative;
+    top: 2px;
 }
 
 .top-bar-right {
@@ -92,7 +92,8 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    margin-right: -8px; /* optical alignment with the page edge */
+    margin-right: -8px;
+    /* optical alignment with the page edge */
     padding: 0;
     border: 0;
     border-radius: var(--radius-sm);
@@ -123,9 +124,9 @@
         height: 26px;
     }
 
-    .top-TrackSync {
-        margin-top: 2px;
-        font-size: 17px;
+    .top-logo-text {
+        height: 18px;
+        top: 1px;
     }
 
     /* The menu button replaces avatar + name (the sheet shows them instead). */

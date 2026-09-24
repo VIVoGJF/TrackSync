@@ -211,9 +211,6 @@ export function ArchiveModal({
                                                         disabled={pending}
                                                         aria-label={`Delete ${task.title}`}
                                                     >
-                                                        <span aria-hidden="true">
-                                                            🗑
-                                                        </span>
                                                         Delete
                                                     </button>
                                                 </div>
