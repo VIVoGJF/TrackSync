@@ -52,7 +52,12 @@ export function DashboardPage() {
     if (dashboardQuery.isLoading) {
         return (
             <div className="dashboard-page">
-                <TopBar username={user?.username ?? ''} />
+                <TopBar
+                    userId={user?.id ?? ''}
+                    username={user?.username ?? ''}
+                    avatarUploaded={user?.avatar_uploaded ?? false}
+                    avatarVersion={user?.avatar_version ?? 0}
+                />
                 <p className="dashboard-loading">Loading…</p>
             </div>
         );
@@ -61,7 +66,12 @@ export function DashboardPage() {
     if (dashboardQuery.isError || !dashboardQuery.data) {
         return (
             <div className="dashboard-page">
-                <TopBar username={user?.username ?? ''} />
+                <TopBar
+                    userId={user?.id ?? ''}
+                    username={user?.username ?? ''}
+                    avatarUploaded={user?.avatar_uploaded ?? false}
+                    avatarVersion={user?.avatar_version ?? 0}
+                />
                 <p className="dashboard-error">
                     Couldn't load your dashboard. Try refreshing.
                 </p>
@@ -81,7 +91,10 @@ export function DashboardPage() {
     return (
         <div className="dashboard-page">
             <TopBar
+                userId={user?.id ?? ''}
                 username={user?.username ?? ''}
+                avatarUploaded={user?.avatar_uploaded ?? false}
+                avatarVersion={user?.avatar_version ?? 0}
                 onMenuClick={() => setMenuOpen((open) => !open)}
                 menuOpen={menuOpen}
                 onLogout={logout}
@@ -97,7 +110,11 @@ export function DashboardPage() {
 
             <div className="dashboard-profile-menu">
                 <ProfilePanel
+                    userId={user?.id ?? ''}
                     username={user?.username ?? ''}
+                    displayName={user?.display_name}
+                    avatarUploaded={user?.avatar_uploaded ?? false}
+                    avatarVersion={user?.avatar_version ?? 0}
                     isOpen={menuOpen}
                     onLogout={logout}
                     currentPage="dashboard"
