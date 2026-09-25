@@ -1,9 +1,15 @@
 import { useNavigate } from 'react-router-dom';
+import { Avatar } from './Avatar';
 import { ThemeToggle } from './ThemeToggle';
+import { getAvatarUrl } from '../lib/avatar';
 import './ProfilePanel.css';
 
 interface ProfilePanelProps {
+    userId: string;
     username: string;
+    displayName?: string | null;
+    avatarUploaded: boolean;
+    avatarVersion: number;
     /** Phones only: whether the slide-in sheet is showing. Ignored on desktop. */
     isOpen?: boolean;
     /** Phones only: shows a Log out button inside the sheet. */
@@ -13,23 +19,31 @@ interface ProfilePanelProps {
 }
 
 export function ProfilePanel({
+    userId,
     username,
+    displayName,
+    avatarUploaded,
+    avatarVersion,
     isOpen = false,
     onLogout,
     currentPage = 'profile',
 }: ProfilePanelProps) {
     const navigate = useNavigate();
+    const avatarUrl = getAvatarUrl(userId, avatarUploaded, avatarVersion);
 
     return (
         <aside
             id="profile-menu"
             className={`profile-panel${isOpen ? ' profile-panel-open' : ''}`}
         >
-            <div className="profile-avatar" aria-hidden="true" />
+            <Avatar src={avatarUrl} size={220} alt="" className="profile-avatar" />
+            {displayName && <p className="profile-display-name">{displayName}</p>}
             <p className="profile-name">{username}</p>
-            <button className="edit-profile-button" type="button">
+            <button className="edit-profile-button" type="button" onClick={() => navigate('/settings')}>
                 <span className="edit-button-text">Edit profile</span>
             </button>
+
+            <div className="profile-panel-divider" />
 
             <nav className="profile-nav">
                 {currentPage === 'dashboard' ? (

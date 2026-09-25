@@ -1,0 +1,125 @@
+.settings-row {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+
+    padding: 14px 16px;
+    border: 0;
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-surface);
+    color: var(--text-primary);
+
+    font-family: var(--font-ui);
+    font-size: 14px;
+    text-align: left;
+}
+
+button.settings-row:hover {
+    background: var(--bg-card);
+}
+
+.settings-row-label {
+    font-weight: 500;
+}
+
+.settings-row-value {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+}
+
+.settings-row-placeholder {
+    color: var(--text-muted);
+}
+
+/* ---- Editing state ---- */
+
+.settings-row-editing {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+    cursor: default;
+}
+
+.settings-row-editing-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
+
+.settings-row-editing-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.settings-row-input {
+    flex: 1;
+    min-width: 0;
+    box-sizing: border-box;
+    height: 36px;
+    padding: 0 var(--space-3);
+
+    border: 0;
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    font-family: var(--font-ui);
+    font-size: 13px;
+    outline: none;
+}
+
+.settings-row-input:focus {
+    background: var(--bg-card-hover);
+}
+
+.settings-row-cancel,
+.settings-row-save {
+    flex-shrink: 0;
+    height: 36px;
+    padding: 0 var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.settings-row-cancel {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.settings-row-cancel:hover:not(:disabled) {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.settings-row-save {
+    background: #11632a46;
+    color: #2db55d;
+}
+
+.settings-row-save:hover:not(:disabled) {
+    background: #2b934349;
+}
+
+.settings-row-save:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.settings-row-error {
+    margin: 0;
+    color: var(--danger);
+    font-size: 12px;
+}

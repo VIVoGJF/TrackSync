@@ -9,6 +9,10 @@ interface AuthContextValue {
   isLoading: boolean;
   login: (identifier: string, password: string) => Promise<void>;
   logout: () => void;
+  /** Patches the cached user in memory. Never refetches /auth/me — call
+   *  this after any mutation (username, display name, avatar) that
+   *  changes what /auth/me would return. */
+  updateUser: (patch: Partial<CurrentUser>) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -57,8 +61,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  function updateUser(patch: Partial<CurrentUser>) {
+    setUser((current) => (current ? { ...current, ...patch } : current));
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

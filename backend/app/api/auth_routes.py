@@ -116,9 +116,8 @@ async def get_me(current_user: User = Depends(get_current_user)):
         "username": current_user.username,
         "email": current_user.email,
         "display_name": current_user.display_name,
-        "avatar_url": avatar_service.build_avatar_url(
-            current_user.id, current_user.avatar_uploaded, current_user.avatar_version
-        ),
+        "avatar_uploaded": current_user.avatar_uploaded,
+        "avatar_version": current_user.avatar_version,
         "is_active": current_user.is_active,
         "created_at": current_user.created_at
     }

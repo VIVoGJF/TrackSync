@@ -80,14 +80,6 @@
     border-radius: var(--radius-sm);
 }
 
-.top-bar-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--bg-card);
-    border: 0px solid var(--border-subtle);
-}
-
 .top-bar-username {
     font-size: 14px;
     font-weight: 500;

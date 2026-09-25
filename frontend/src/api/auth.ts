@@ -9,6 +9,9 @@ export interface CurrentUser {
     id: string;
     username: string;
     email: string;
+    display_name: string | null;
+    avatar_uploaded: boolean;
+    avatar_version: number;
     is_active: boolean;
     created_at: string;
 }
@@ -34,4 +37,11 @@ export async function signup(username: string, email: string, password: string):
 export async function getCurrentUser(): Promise<CurrentUser> {
     const { data } = await apiClient.get<CurrentUser>('/auth/me');
     return data;
+}
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await apiClient.post('/auth/me/password', {
+        current_password: currentPassword,
+        new_password: newPassword,
+    });
 }

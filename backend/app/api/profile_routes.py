@@ -82,9 +82,8 @@ async def upload_avatar(
     await db.refresh(current_user)
 
     return {
-        "avatar_url": avatar_service.build_avatar_url(
-            current_user.id, current_user.avatar_uploaded, current_user.avatar_version
-        )
+        "avatar_uploaded": current_user.avatar_uploaded,
+        "avatar_version": current_user.avatar_version,
     }
 
 
@@ -98,4 +97,7 @@ async def remove_avatar(
         current_user.avatar_uploaded = False
         await db.commit()
 
-    return {"avatar_url": None}
+    return {
+        "avatar_uploaded": current_user.avatar_uploaded,
+        "avatar_version": current_user.avatar_version,
+    }
