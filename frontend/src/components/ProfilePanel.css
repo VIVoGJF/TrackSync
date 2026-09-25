@@ -7,18 +7,27 @@
 }
 
 .profile-avatar {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: var(--bg-card);
+    align-self: center;
 }
 
-.profile-name {
+.profile-display-name {
     margin: 0;
     align-self: center;
     font-size: 18px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: var(--space-1) var(--space-1) 0;
+}
+
+.profile-name {
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    margin: 0;
+    text-align: center;
+    font-size: 14px;
     font-weight: 600;
-    padding: var(--space-2) var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    box-sizing: border-box;
 }
 
 .edit-profile-button {
@@ -117,13 +126,16 @@
     }
 
     .profile-avatar {
-        width: 72px;
-        height: 72px;
-        align-self: center;
+        /* Overrides the Avatar component's inline width/height (it's always
+           passed 220 from JS — this media query is what actually shrinks it
+           on phones). */
+        width: 72px !important;
+        height: 72px !important;
     }
 
     .profile-name {
         font-size: 16px;
+        padding: 10px;
     }
 
     .profile-nav {

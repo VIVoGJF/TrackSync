@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from './ThemeToggle';
 import './AccountMenu.css';
 
@@ -6,9 +7,15 @@ interface AccountMenuProps {
 }
 
 export function AccountMenu({ onLogout }: AccountMenuProps) {
+    const navigate = useNavigate();
+
     return (
         <div className="account-menu" role="menu">
-            <button className="account-menu-edit-profile" type="button">
+            <button
+                className="account-menu-edit-profile"
+                type="button"
+                onClick={() => navigate('/settings')}
+            >
                 Edit profile
             </button>
 

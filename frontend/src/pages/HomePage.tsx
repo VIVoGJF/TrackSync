@@ -59,7 +59,12 @@ export function HomePage() {
   if (dashboardQuery.isLoading || activityQuery.isLoading) {
     return (
       <div className="home-page">
-        <TopBar username={user?.username ?? ''} />
+        <TopBar
+          userId={user?.id ?? ''}
+          username={user?.username ?? ''}
+          avatarUploaded={user?.avatar_uploaded ?? false}
+          avatarVersion={user?.avatar_version ?? 0}
+        />
         <p className="home-loading">Loading…</p>
       </div>
     );
@@ -68,7 +73,12 @@ export function HomePage() {
   if (dashboardQuery.isError || !dashboardQuery.data) {
     return (
       <div className="home-page">
-        <TopBar username={user?.username ?? ''} />
+        <TopBar
+          userId={user?.id ?? ''}
+          username={user?.username ?? ''}
+          avatarUploaded={user?.avatar_uploaded ?? false}
+          avatarVersion={user?.avatar_version ?? 0}
+        />
         <p className="home-error">Couldn't load your dashboard. Try refreshing.</p>
       </div>
     );
@@ -89,7 +99,10 @@ export function HomePage() {
   return (
     <div className="home-page">
       <TopBar
+        userId={user?.id ?? ''}
         username={user?.username ?? ''}
+        avatarUploaded={user?.avatar_uploaded ?? false}
+        avatarVersion={user?.avatar_version ?? 0}
         onMenuClick={() => setMenuOpen((open) => !open)}
         menuOpen={menuOpen}
         onLogout={logout}
@@ -105,7 +118,11 @@ export function HomePage() {
 
       <div className="home-content">
         <ProfilePanel
+          userId={user?.id ?? ''}
           username={user?.username ?? ''}
+          displayName={user?.display_name}
+          avatarUploaded={user?.avatar_uploaded ?? false}
+          avatarVersion={user?.avatar_version ?? 0}
           isOpen={menuOpen}
           onLogout={logout}
         />

@@ -5,11 +5,16 @@ import logoLight from '../../public/favlogo-light.png';
 import logoTextDark from '../assets/logo-text.png';
 import logoTextLight from '../assets/logo-text-light.png';
 import { AccountMenu } from './AccountMenu';
+import { Avatar } from './Avatar';
 import { useThemedAsset } from '../context/ThemeContext';
+import { getAvatarUrl } from '../lib/avatar';
 import './TopBar.css';
 
 interface TopBarProps {
+    userId: string;
     username: string;
+    avatarUploaded: boolean;
+    avatarVersion: number;
     /** When provided, phones get a hamburger button that calls this (opens the profile menu). */
     onMenuClick?: () => void;
     menuOpen?: boolean;
@@ -17,11 +22,20 @@ interface TopBarProps {
     onLogout?: () => void;
 }
 
-export function TopBar({ username, onMenuClick, menuOpen = false, onLogout }: TopBarProps) {
+export function TopBar({
+    userId,
+    username,
+    avatarUploaded,
+    avatarVersion,
+    onMenuClick,
+    menuOpen = false,
+    onLogout,
+}: TopBarProps) {
     const [accountMenuOpen, setAccountMenuOpen] = useState(false);
     const accountRef = useRef<HTMLDivElement>(null);
     const logo = useThemedAsset(logoDark, logoLight);
     const logoText = useThemedAsset(logoTextDark, logoTextLight);
+    const avatarUrl = getAvatarUrl(userId, avatarUploaded, avatarVersion);
 
     useEffect(() => {
         if (!accountMenuOpen) return;
@@ -66,7 +80,7 @@ export function TopBar({ username, onMenuClick, menuOpen = false, onLogout }: To
                             aria-haspopup="menu"
                             aria-expanded={accountMenuOpen}
                         >
-                            <div className="top-bar-avatar" aria-hidden="true" />
+                            <Avatar src={avatarUrl} size={32} alt="" />
                             <span className="top-bar-username">{username}</span>
                         </button>
 

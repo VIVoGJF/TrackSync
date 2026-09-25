@@ -1,0 +1,132 @@
+.avatar-uploader {
+    position: relative;
+    display: inline-flex;
+    align-self: center;
+}
+
+.avatar-uploader-trigger {
+    position: relative;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+}
+
+.avatar-uploader-edit-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(16, 18, 20, 0.55);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.avatar-uploader-trigger:hover .avatar-uploader-edit-overlay,
+.avatar-uploader-trigger[aria-expanded='true'] .avatar-uploader-edit-overlay {
+    opacity: 1;
+}
+
+.avatar-uploader-popover {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+
+    width: max(240px, 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-panel);
+}
+
+.avatar-uploader-upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    width: 100%;
+
+    height: 40px;
+    padding: 0 var(--space-4);
+    border: 0;
+    border-radius: var(--radius-sm);
+
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.avatar-uploader-upload-button:hover:not(:disabled) {
+    background: var(--bg-card-hover);
+}
+
+.avatar-uploader-upload-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.avatar-uploader-delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    width: 100%;
+
+    height: 40px;
+    padding: 0 var(--space-4);
+    border: 0;
+    border-radius: var(--radius-sm);
+
+    background: var(--danger-dim);
+    color: var(--danger);
+
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.avatar-uploader-delete-button:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.avatar-uploader-delete-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.avatar-uploader-hint {
+    margin: 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.avatar-uploader-error {
+    margin: 0;
+    text-align: center;
+    color: var(--danger);
+    font-size: 12px;
+}
+
+.avatar-uploader-file-input {
+    display: none;
+}
