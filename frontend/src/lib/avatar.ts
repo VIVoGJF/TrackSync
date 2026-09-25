@@ -1,5 +1,5 @@
-const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL ?? '').replace(/\/+$/, '');
-const AVATAR_BUCKET = import.meta.env.VITE_SUPABASE_AVATAR_BUCKET ?? 'avatars';
+const SUPABASE_URL = (import.meta.env.SUPABASE_URL ?? '').replace(/\/+$/, '');
+const AVATAR_BUCKET = import.meta.env.AVATAR_BUCKET ?? 'avatars';
 
 
 const AVATAR_EXTENSION = 'webp';
