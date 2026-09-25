@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Avatar } from './Avatar';
+import { AvatarCropModal } from './AvatarCropModal';
 import { useAuth } from '../context/AuthContext';
 import { getAvatarUrl, AVATAR_MAX_BYTES } from '../lib/avatar';
 import { uploadAvatar, removeAvatar } from '../api/profile';
@@ -12,6 +13,7 @@ export function AvatarUploader() {
     const { user, updateUser } = useAuth();
     const [popoverOpen, setPopoverOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [pendingImageSrc, setPendingImageSrc] = useState<string | null>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -23,9 +25,11 @@ export function AvatarUploader() {
             updateUser({ avatar_uploaded: data.avatar_uploaded, avatar_version: data.avatar_version });
             setPopoverOpen(false);
             setError(null);
+            closeCropModal();
         },
         onError: () => {
             setError('Upload failed. Try a different image.');
+            closeCropModal();
         },
     });
 
@@ -63,6 +67,11 @@ export function AvatarUploader() {
         };
     }, [popoverOpen]);
 
+    function closeCropModal() {
+        if (pendingImageSrc) URL.revokeObjectURL(pendingImageSrc);
+        setPendingImageSrc(null);
+    }
+
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
         event.target.value = '';
@@ -79,7 +88,12 @@ export function AvatarUploader() {
         }
 
         setError(null);
-        uploadMutation.mutate(file);
+        setPendingImageSrc(URL.createObjectURL(file));
+    }
+
+    function handleCropConfirm(blob: Blob) {
+        const croppedFile = new File([blob], 'avatar.webp', { type: 'image/webp' });
+        uploadMutation.mutate(croppedFile);
     }
 
     function handleDelete() {
@@ -164,6 +178,15 @@ export function AvatarUploader() {
                         onChange={handleFileChange}
                     />
                 </div>
+            )}
+
+            {pendingImageSrc && (
+                <AvatarCropModal
+                    imageSrc={pendingImageSrc}
+                    onCancel={closeCropModal}
+                    onConfirm={handleCropConfirm}
+                    isSaving={uploadMutation.isPending}
+                />
             )}
         </div>
     );
