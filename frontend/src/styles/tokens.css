@@ -19,13 +19,6 @@
     /* Brand (fixed, doesn't change with theme) */
     --calendar-body-dark: #1d2f33;
 
-    /* Contribution / progress scale (shared by heatmap + task grid).
-       Kept the same across themes, level-0 tracks the surface color. */
-    --level-1: #116329;
-    --level-2: #2B9343;
-    --level-3: #62D17D;
-    --level-4: #ACEEBB;
-
     /* Task-type accent colors (for gauge segments / breakdown) */
     --type-daily: #62d17d;
     --type-weekly: #5b8def;
@@ -43,6 +36,12 @@
     /* cards, empty grid/heatmap cell */
     --bg-card-hover: #303234;
     --border-subtle: #34363a;
+
+    /* Contribution / progress scale (shared by heatmap + task grid).*/
+    --level-1: #116329;
+    --level-2: #2B9343;
+    --level-3: #62D17D;
+    --level-4: #ACEEBB;
 
     /* Text */
     --text-primary: #e6e6e6;
@@ -68,6 +67,13 @@
     --bg-card: #e2e9e6;
     --bg-card-hover: #d8e1dd;
     --border-subtle: #ccd7d3;
+
+        /* Contribution / progress scale (shared by heatmap + task grid).*/
+    --level-1: #ACEEBB;
+    --level-2: #62D17D;
+    --level-3: #2B9343;
+    --level-4: #116329;
+
 
     /* Text */
     --text-primary: #202827;
