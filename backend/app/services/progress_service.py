@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import TaskType, DeadlineTaskCompletion, RecurringTaskProgress, WeeklyTaskCompletion, Task, TaskActivePeriod
-from app.services.calendar_service import get_days_in_month, get_weeks_in_month 
+from app.services.calendar_service import get_days_in_month, get_weeks_in_month,get_week_start, get_week_end
 
 
 def initialize_status_string(task_type: TaskType, year: int, month: int) -> str:
@@ -20,6 +20,28 @@ def initialize_status_string(task_type: TaskType, year: int, month: int) -> str:
         raise ValueError("Deadline tasks do not use progress strings.")
 
     return "0" * length
+
+async def _create_monthly_progress(db: AsyncSession, task: Task, requested_date: date, status_string: str | None = None) -> RecurringTaskProgress:
+
+    progress = RecurringTaskProgress(
+        task_id=task.id,
+        year=requested_date.year,
+        month=requested_date.month,
+        status_string=(
+            status_string
+            if status_string is not None
+            else initialize_status_string(
+                task.task_type,
+                requested_date.year,
+                requested_date.month,
+            )
+        ),
+    )
+
+    db.add(progress)
+    await db.flush()
+
+    return progress
 
 async def _get_monthly_progress(db: AsyncSession, task: Task, requested_date: date,) -> RecurringTaskProgress:
 
@@ -36,21 +58,11 @@ async def _get_monthly_progress(db: AsyncSession, task: Task, requested_date: da
     if progress is not None:
         return progress
     
-    progress = RecurringTaskProgress(
-        task_id=task.id,
-        year=requested_date.year,
-        month=requested_date.month,
-        status_string=initialize_status_string(
-            task.task_type,
-            requested_date.year,
-            requested_date.month,
-        ),
+    return await _create_monthly_progress(
+        db=db,
+        task=task,
+        requested_date=requested_date,
     )
-
-    db.add(progress)
-    await db.flush()
-
-    return progress
 
 async def _toggle_status_bit(status_string: str, index: int) -> tuple[str, int]:
     current_status = int(status_string[index])
@@ -86,10 +98,11 @@ async def toggle_weekly_progress(db: AsyncSession, task: Task, requested_date: d
     
     week_index = _get_week_index(requested_date)
     week_number = week_index + 1
+    
+    week_end = get_week_end(requested_date)
 
     result = await db.execute(
-        select(WeeklyTaskCompletion)
-        .where(
+        select(WeeklyTaskCompletion).where(
             WeeklyTaskCompletion.task_id == task.id,
             WeeklyTaskCompletion.year == requested_date.year,
             WeeklyTaskCompletion.month == requested_date.month,
@@ -105,6 +118,7 @@ async def toggle_weekly_progress(db: AsyncSession, task: Task, requested_date: d
             + "1"
             + progress.status_string[week_index + 1:]
         )
+
         progress.updated_at = datetime.now()
 
         completion = WeeklyTaskCompletion(
@@ -117,19 +131,82 @@ async def toggle_weekly_progress(db: AsyncSession, task: Task, requested_date: d
 
         db.add(completion)
 
+        if week_end.month != requested_date.month:
+            next_progress = await _get_monthly_progress(
+                db=db,
+                task=task,
+                requested_date=week_end,
+            )
+
+            next_week_index = _get_week_index(week_end)
+            next_week_number = next_week_index + 1
+
+            next_progress.status_string = (
+                next_progress.status_string[:next_week_index]
+                + "1"
+                + next_progress.status_string[next_week_index + 1:]
+            )
+
+            next_progress.updated_at = datetime.now()
+
+            next_completion = WeeklyTaskCompletion(
+                task_id=task.id,
+                year=week_end.year,
+                month=week_end.month,
+                week_number=next_week_number,
+                completion_date=requested_date,
+            )
+
+            db.add(next_completion)
+
         return 1, week_index
 
     if completion.completion_date != requested_date:
-        raise ValueError("Weekly task is already completed for this week.")
+        raise ValueError(
+            "Weekly task is already completed for this week."
+        )
+
+    await db.delete(completion)
 
     progress.status_string = (
         progress.status_string[:week_index]
         + "0"
         + progress.status_string[week_index + 1:]
     )
+
     progress.updated_at = datetime.now()
 
-    await db.delete(completion)
+    if week_end.month != requested_date.month:
+        next_progress = await _get_monthly_progress(
+            db=db,
+            task=task,
+            requested_date=week_end,
+        )
+
+        next_week_index = _get_week_index(week_end)
+        next_week_number = next_week_index + 1
+
+        next_progress.status_string = (
+            next_progress.status_string[:next_week_index]
+            + "0"
+            + next_progress.status_string[next_week_index + 1:]
+        )
+
+        next_progress.updated_at = datetime.now()
+
+        next_result = await db.execute(
+            select(WeeklyTaskCompletion).where(
+                WeeklyTaskCompletion.task_id == task.id,
+                WeeklyTaskCompletion.year == week_end.year,
+                WeeklyTaskCompletion.month == week_end.month,
+                WeeklyTaskCompletion.week_number == next_week_number,
+            )
+        )
+
+        next_completion = next_result.scalar_one_or_none()
+
+        if next_completion is not None:
+            await db.delete(next_completion)
 
     return 0, week_index
 
