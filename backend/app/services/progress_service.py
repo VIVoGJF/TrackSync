@@ -5,7 +5,7 @@ from calendar import monthcalendar
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import TaskType, DeadlineTaskCompletion, RecurringTaskProgress, WeeklyTaskCompletion, Task
+from app.db.models import TaskType, DeadlineTaskCompletion, RecurringTaskProgress, WeeklyTaskCompletion, Task, TaskActivePeriod
 from app.services.calendar_service import get_days_in_month, get_weeks_in_month 
 
 
@@ -21,20 +21,35 @@ def initialize_status_string(task_type: TaskType, year: int, month: int) -> str:
 
     return "0" * length
 
-async def _get_monthly_progress(db: AsyncSession, task_id: UUID, year: int, month: int) -> RecurringTaskProgress:
+async def _get_monthly_progress(db: AsyncSession, task: Task, requested_date: date,) -> RecurringTaskProgress:
+
     result = await db.execute(
-        select(RecurringTaskProgress)
-        .where(
-            RecurringTaskProgress.task_id == task_id,
-            RecurringTaskProgress.year == year,
-            RecurringTaskProgress.month == month,
+        select(RecurringTaskProgress).where(
+            RecurringTaskProgress.task_id == task.id,
+            RecurringTaskProgress.year == requested_date.year,
+            RecurringTaskProgress.month == requested_date.month,
         )
     )
-    progress = result.scalars().first()
+
+    progress = result.scalar_one_or_none()
+
+    if progress is not None:
+        return progress
     
-    if progress is None:
-        raise ValueError("Monthly Progress not found")
-    
+    progress = RecurringTaskProgress(
+        task_id=task.id,
+        year=requested_date.year,
+        month=requested_date.month,
+        status_string=initialize_status_string(
+            task.task_type,
+            requested_date.year,
+            requested_date.month,
+        ),
+    )
+
+    db.add(progress)
+    await db.flush()
+
     return progress
 
 async def _toggle_status_bit(status_string: str, index: int) -> tuple[str, int]:
@@ -55,7 +70,7 @@ def _get_week_index(requested_date: date) -> int:
     raise ValueError("Unable to dertermine week index")
 
 async def toggle_daily_progress(db: AsyncSession, task: Task, requested_date: date) -> int:
-    progress = await _get_monthly_progress(db, task.id, requested_date.year, requested_date.month)
+    progress = await _get_monthly_progress(db, task, requested_date)
     
     day_index = requested_date.day - 1
     
@@ -67,7 +82,7 @@ async def toggle_daily_progress(db: AsyncSession, task: Task, requested_date: da
     return new_status
 
 async def toggle_weekly_progress(db: AsyncSession, task: Task, requested_date: date) -> tuple[int, int]:
-    progress = await _get_monthly_progress(db, task.id, requested_date.year, requested_date.month)
+    progress = await _get_monthly_progress(db, task, requested_date)
     
     week_index = _get_week_index(requested_date)
     week_number = week_index + 1
