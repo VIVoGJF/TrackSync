@@ -1,4 +1,3 @@
-from datetime import date
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -9,6 +8,7 @@ from app.db.database import get_db
 from app.db.models import Task, TaskType, User
 from app.schemas.task_schemas import TaskCreate, TaskResponse, DeadlineUpdate
 from app.api.auth_routes import get_current_user
+from app.core.timezones import get_user_today
 
 from app.services.task_service import create_deadline_task, create_recurring_task, update_deadline, archive_task_service, restore_task_service
 
@@ -28,7 +28,7 @@ async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db), curr
         else None
     )
     
-    current_date = date.today()
+    current_date = get_user_today(current_user)
 
     if task.task_type == TaskType.DEADLINE:
         if task.deadline is None:
@@ -99,7 +99,7 @@ async def update_task_deadline(task_id: UUID, deadline_update: DeadlineUpdate, d
         db=db,
         task=task,
         new_deadline=deadline_update.deadline,
-        current_date=date.today(),
+        current_date=get_user_today(current_user),
     )    
 
 @router.get("/archived", response_model=list[TaskResponse])
@@ -121,7 +121,7 @@ async def archive_task(task_id: UUID, db: AsyncSession = Depends(get_db), curren
         db=db,
         task_id=task_id,
         current_user=current_user,
-        current_date=date.today(),
+        current_date=get_user_today(current_user),
     )
 
 @router.patch("/{task_id}/restore", response_model=TaskResponse)
@@ -130,7 +130,7 @@ async def restore_task(task_id: UUID, db: AsyncSession = Depends(get_db), curren
             db=db,
             task_id=task_id,
             current_user=current_user,
-            current_date=date.today(),
+            current_date=get_user_today(current_user),
         )
 
 @router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
