@@ -27,12 +27,17 @@ async def get_dashboard(year: int, month: int, db: AsyncSession = Depends(get_db
 
     month_start = date(year, month, 1)
     month_end = date(year, month, monthrange(year, month)[1])
+    
+    today = get_user_today(current_user)
+    is_past_month = (year, month) < (today.year, today.month)
+
+    task_filters = [Task.user_id == current_user.id]
+
+    if not is_past_month:
+        task_filters.append(Task.is_archived.is_(False))
 
     tasks_result = await db.execute(
-        select(Task).where(
-            Task.user_id == current_user.id,
-            Task.is_archived.is_(False),
-        )
+        select(Task).where(*task_filters)
     )
 
     tasks = tasks_result.scalars().all()
