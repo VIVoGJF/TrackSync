@@ -27,3 +27,9 @@ class User(Base):
     tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
     activities = relationship("DailyActivity", back_populates="user", cascade="all, delete-orphan")
     collection = relationship("TaskCollection", back_populates="user", cascade="all, delete-orphan")
+    
+    projects_created = relationship("Project", back_populates="creator", cascade="all, delete-orphan")
+    project_memberships = relationship("ProjectMember", back_populates="user", cascade="all, delete-orphan")
+    project_requests_sent = relationship("ProjectRequest", foreign_keys="ProjectRequest.requester_id", back_populates="requester", cascade="all, delete-orphan")
+    project_requests_received = relationship("ProjectRequest", foreign_keys="ProjectRequest.target_user_id", back_populates="target_user", cascade="all, delete-orphan")
+    notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
